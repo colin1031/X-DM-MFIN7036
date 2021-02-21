@@ -1,7 +1,7 @@
 # NLP-Project-MFIN7036
 # Teamname: X-DM
 Group Leader:\
-Ho Wei "Colin" Ko github-username: colin1031\
+Ho Wei "Colin" Ko github-username: colin1031\\
 Group Member:\
 Zongyu LYU github-username: Zongyu-Lyu\
 Yifeng ZHONG github-username: joyfuljohn\
