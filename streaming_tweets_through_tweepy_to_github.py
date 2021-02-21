@@ -58,7 +58,7 @@ class listener(tweepy.StreamListener):
         print(status_code)
         return True
     
-    def on_limit(self,status):
+    def on_limit(self,status): #restart if disconnect
         print ("Rate Limit Exceeded, Sleep for 2 Mins")
         time.sleep(2 * 60)
         return True
