@@ -31,30 +31,11 @@ os.chdir(mac_path)
 
 os.getcwd()
 
-"""
-Developer Key infos (Colin)
+access_token=''
+access_token_secret=''
 
-API key:
-x3uf7Z6D0sH4yR4bkZWAP5kt6
-
-API secret key:
-clc6S4zs1QN97eOWWvwCjJCPWN8InJmvlfQFFSN0bmclZRo43M
-
-Bearer token:
-AAAAAAAAAAAAAAAAAAAAAGnMMwEAAAAAvLWAe4AhydTWDjQIpbMSotTjJhQ%3DTtEIlJKuftPFwiX4Ykt4I4X9ssUbXrKecPjaUbtqk0GY3HwCdO
-
-Access token:
-2719298305-g9FulNdsGKXy40kuNKDjshi2GIRH1ywjMbMKmk0
-
-Access token secret:
-uP2Z6Gs2sxVrEwNnKG15AsvtCyD6nL8wCHFoe2hq1KuME
-"""
-
-access_token='2719298305-g9FulNdsGKXy40kuNKDjshi2GIRH1ywjMbMKmk0'
-access_token_secret='uP2Z6Gs2sxVrEwNnKG15AsvtCyD6nL8wCHFoe2hq1KuME'
-
-consumer_key='x3uf7Z6D0sH4yR4bkZWAP5kt6'
-consumer_secret='clc6S4zs1QN97eOWWvwCjJCPWN8InJmvlfQFFSN0bmclZRo43M'
+consumer_key=''
+consumer_secret=''
 
 """
 Verifying Credentials & test authentication
