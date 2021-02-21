@@ -12,7 +12,7 @@ Mining Tweets Through Tweepy
 If we want to stream tweets through tweepy
 """
 import tweepy
-imort os
+import os
 
 path=''
 
