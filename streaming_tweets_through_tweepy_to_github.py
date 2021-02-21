@@ -74,7 +74,7 @@ mystream.filter(track=['XRP','Xrp','xrp','RIPPLE','Ripple','ripple'],is_async=Tr
 #is_async=True #background streaming ,will not run in console
     
 """
-if is_async=False, control c to stop    
+if we set is_async=False, control c to stop    
 """
     
 """
