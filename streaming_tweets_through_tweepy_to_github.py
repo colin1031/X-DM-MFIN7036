@@ -7,21 +7,18 @@ Created on Sun Feb 21 19:35:57 2021
 """
 
 """
-Mining Tweets Through Tweepy (Streaming)
+Mining Tweets Through Tweepy
+
+If we want to stream tweets through tweepy
 """
-import tweepy
-import os
-
-
+#Keys entries
 access_token=''
 access_token_secret=''
 
 consumer_key=''
 consumer_secret=''
 
-"""
-Verifying Credentials & test authentication
-"""
+#Verifying Credentials & test authentication
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(consumer_key,consumer_secret)
 auth.set_access_token(access_token,access_token_secret)
@@ -33,10 +30,7 @@ try:
 except:
     print("Error during authentication")
 
-
-"""
-Streaming
-"""
+#Mining Tweets (Streaming)
 class listener(tweepy.StreamListener):
     def on_status(self, status):
         with open('data-streaming-tweets.txt', 'a',encoding="utf-8") as f:
@@ -73,23 +67,15 @@ mystream.filter(track=['XRP','Xrp','xrp','RIPPLE','Ripple','ripple'],is_async=Tr
 
 #is_async=True #background streaming ,will not run in console
     
-"""
-if we set is_async=False, control c to stop    
-"""
-    
-"""
-disconnecting background stream (if is_async=True) 
-"""
+#if we set is_async=False, control c to stop    
+
+#disconnecting background stream (if is_async=True) 
 mystream.disconnect()
 
-"""
-Close file after mining
-"""
+#Close file after mining
 f.close()
 
-"""
-Read txt file
-"""
+#Read txt file
 f = open(mac_path+os.sep+'data-streaming-tweets.txt', "r",encoding="utf-8")
 f.read()
 f.close()
