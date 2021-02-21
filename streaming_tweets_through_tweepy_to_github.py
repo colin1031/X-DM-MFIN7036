@@ -11,6 +11,11 @@ Mining Tweets Through Tweepy
 
 If we want to stream tweets through tweepy
 """
+import tweepy
+imort os
+
+path=''
+
 #Keys entries
 access_token=''
 access_token_secret=''
@@ -76,6 +81,6 @@ mystream.disconnect()
 f.close()
 
 #Read txt file
-f = open(mac_path+os.sep+'data-streaming-tweets.txt', "r",encoding="utf-8")
+f = open(path+os.sep+'data-streaming-tweets.txt', "r",encoding="utf-8")
 f.read()
 f.close()
