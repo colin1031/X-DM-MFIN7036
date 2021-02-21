@@ -20,7 +20,6 @@ import
 """
 import os
 import datetime
-import tweepy
 import time
 import twint
 import pandas as pd
@@ -47,7 +46,7 @@ Mining Old tweets through Twint
 
 #configuration
 config = twint.Config()
-config.Search = ['Xrp' or "Ripple"]
+config.Search = ['Xrp' or "Ripple"] #if tweet include xrp or ripple (Capital letter or not doesn't matter)
 config.Lang = "en"
 config.Limit = 100000000000000000000
 config.Since = '2020-02-01'
