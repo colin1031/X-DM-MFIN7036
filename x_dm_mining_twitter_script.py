@@ -41,7 +41,7 @@ os.getcwd()
 
 
 """
-Mining Old tweets through Twint
+Mining tweets through Twint (Specific time range)
 """
 
 #configuration
