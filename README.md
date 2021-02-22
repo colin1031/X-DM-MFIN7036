@@ -6,4 +6,4 @@ Group Member:\
 Zongyu LYU github-username: Zongyu-Lyu\
 Yifeng ZHONG github-username: joyfuljohn\
 Shurong WANG github-username: shurong-rbg\
-Yi SUN 3035815959 github-username: Levinee7
+Yi SUN github-username: Levinee7
