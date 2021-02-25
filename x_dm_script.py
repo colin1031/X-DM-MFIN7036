@@ -129,5 +129,68 @@ cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
 
 """
-Extract number of followers from each user
+tweets level 
+"""
+
+"""
+Extract number of followers from each user through Tweepy
+likes
+
+"""
+
+"""
+Grading tweets based on sentiments 
+
+試試不同的打分的方法
+"""
+
+"""
+Time period level timeseries (dummy variab)
+"""
+
+
+"""
+新的dataset  based on tweest dataset
+3 dims
+(提及量,火熱dummy), (重要dummy), (正面/中性/負面時期)
+
+每天的提及量 (group by) & Generating a dummy variable (1 rep heat period, 0 rep non) ?
+全language mention, eng/non english, eng/chinese/etc 三種都加進去 看哪個有法
+
+
+Generating a dummy variable (1 rep impactful tweet, o rep non)
+Generating a dummy variable (1 rep positive emotion, 0 rep negative emotion)
+Generating lag variable (t-1) (number of mention mentions ) 昨天會不會影響今天的
+
+"""
+
+
+"""
+concate/merge (financial data 跟 twitter 新的dataset )
+"""
+
+""" (volatility and price change)
+分析 regression
+1.單變量 一個一個套
+2.三變量 
+3. 把其他金融變量加進去 
+"""
+
+""" (volatility and price change)
+用圖分析
+對比同時期
+"""
+
+"""
+預測
+(volatility and price change)
+用machine learning 找出最好的model(regression model 的machine learning)
+"""
+
+"""
+根據這些因子做個backtesting (quant trading)
+"""
+
+"""
+Extra goals
 """
