@@ -36,11 +36,7 @@ Setting directory
 """
 os.getcwd()
 
-# win_path=r''
-# os.chdir(win_path)
-
-mac_path=''
-os.chdir(mac_path)
+path=''path)
 
 os.getcwd()
 
@@ -99,8 +95,8 @@ print("--- %s seconds ---" % (time.time() - start_time_count))
 """
 Read raw data (tweets through Twint with specific time range) & concate those files into one large datafile
 """
-mac_path_data='/Users/colinko/Documents/Colin/HKU/7036/X-dm/raw_data'
-# win_path_data=r'D:\iCloudDrive\Documents\Colin\HKU\7036\X-dm\raw_data'
+path_data=''
+
 
 all_files = glob.glob(mac_path_data + "/*.csv")
 
@@ -112,22 +108,25 @@ for filename in all_files:
 
 raw_data_tweets_thro_twint = pd.concat(li, axis=0, ignore_index=True)
 
-raw_data_tweets_thro_twint.to_csv(mac_path_data+os.sep+'raw_data_tweets.csv')
+raw_data_tweets_thro_twint.to_csv(path_data+os.sep+'raw_data_tweets.csv')
 
 """
 Raw Data Cleaning
 """
-mac_path_data='/Users/colinko/Documents/Colin/HKU/7036/X-dm/raw_data'
-# win_path_data=r'D:\iCloudDrive\Documents\Colin\HKU\7036\X-dm\raw_data'
+path_data=''
 
-raw_data_tweets=pd.read_csv(mac_path_data+os.sep+'raw_data_tweets.csv')
+raw_data_tweets=pd.read_csv(path_data+os.sep+'raw_data_tweets.csv')
+
+#check duplicate
+raw_data_tweets.drop_duplicates()
 
 raw_data_tweets.columns
 extract_columns_list_cleaning_data_use=['created_at','date','time','username','tweet','language',\
                                         'mentions','replies_count','retweets_count','likes_count','hashtags','cashtags','retweet'\
                                             ]
-cleaning_data_tweets=raw_data_tweets[extract_columns_list_cleaning_data_use]
-cleaning_data_tweets.columns
+
+cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
+cleaning_data_tweets_1.columns
 
 """
 Extract number of followers from each user
