@@ -19,8 +19,7 @@ Mining tweets through Twint (Specific time range)
 """
 
 #specific file to save those data
-path_raw_data=r'D:\iCloudDrive\Documents\Colin\HKU\7036\X-dm\raw_data'
-#path_raw_data='/Users/colinko/Documents/Colin/HKU/7036/X-dm/raw_data'
+path_raw_data=''
 
 os.chdir(path_raw_data)
 
@@ -75,9 +74,7 @@ print("--- %s seconds ---" % (time.time() - start_time_count))
 """
 Read raw data (tweets through Twint with specific time range) & concate those files into one large datafile
 """
-# path_raw_data='/Users/colinko/Documents/Colin/HKU/7036/X-dm/raw_data'
-path_raw_data=r'D:\iCloudDrive\Documents\Colin\HKU\7036\X-dm\raw_data'
-
+path_raw_data=''
 all_files = glob.glob(path_raw_data + "/*.csv")
 
 li = []
