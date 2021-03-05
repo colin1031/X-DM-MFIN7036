@@ -180,6 +180,7 @@ Sentiment Vairable (Sun Yi)
 """
 
 cleaning_data_tweets_sentiment=cleaning_data_tweets_1
+cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
 stop_words = set(stopwords.words('english')) #get the stopword set
 tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
 tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
@@ -197,7 +198,7 @@ cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized
 textblob_sentimentscore_list=[]
 nltk_sentimentscore_list=[]
 
-for sentence in cleaning_data_tweets_sentiment['stopword_punctuation_removed_and_lowercased_sentences']:
+for sentence in cleaning_data_tweets_sentiment['fixed_tweets']:
     #using textblob
     s = TextBlob(sentence).sentiment #assign sentiment score of that sentence
     textblob_sentimentscore_list.append(s.polarity)
