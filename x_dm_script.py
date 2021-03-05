@@ -161,7 +161,7 @@ cleaning_data_tweets_1.iloc[1]
 making different variable
 """
 """
-Counting mentions variable
+Counting mentions variable (Colin)
 """
 cleaning_data_tweets_mention=cleaning_data_tweets_1
 
@@ -172,7 +172,7 @@ different_language_number_of_mentions=cleaning_data_tweets_mention.groupby(['dat
 #need to make time series data base on this e.g. en number of mention, hl number of mention
 
 """
-Sentiment Vairable
+Sentiment Vairable (Sun Yi)
 #cleaning and preprocessing (each tweets)
 """
 
@@ -208,14 +208,14 @@ cleaning_data_tweets_sentiment['polarty_score_with_textblob'] = textblob_sentime
 cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = nltk_sentimentscore_list
 
 """
-influencer variable
+influencer variable (Fong Fong)
 Extract number of followers from each user through Tweepy
 likes
 """
 cleaning_data_tweets_influencer=cleaning_data_tweets_1
 
 """
-Financial dataset related (scrape, clean process, calculate daily return stuff
+Financial dataset related (scrape, clean process, calculate daily return stuff (lyu)
 """
 
 
