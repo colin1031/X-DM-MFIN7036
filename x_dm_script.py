@@ -167,9 +167,12 @@ cleaning_data_tweets_mention=cleaning_data_tweets_1
 
 total_number_of_mentions_per_date=cleaning_data_tweets_mention.date.value_counts()
 
-different_language_number_of_mentions=cleaning_data_tweets_mention.groupby(['date','language']).size()
+en_number_of_mentions=cleaning_data_tweets_mention[cleaning_data_tweets_mention['language']=='en']
+en_number_of_mentions_per_day=en_number_of_mentions.groupby('date').size()
+#seems like 'en' size too small
 
-#need to make time series data base on this e.g. en number of mention, hl number of mention
+non_en_number_of_mentions_per_day=[total_number_of_mentions_per_date-en_number_of_mentions_per_day]
+
 
 """
 Sentiment Vairable (Sun Yi)
@@ -220,7 +223,7 @@ Financial dataset related (scrape, clean process, calculate daily return stuff (
 
 
 """
-Merge variable into financial time series dataset
+Merge variable into financial time series dataset & export as pickle
 """
 
 
