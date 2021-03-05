@@ -212,6 +212,7 @@ influencer variable
 Extract number of followers from each user through Tweepy
 likes
 """
+cleaning_data_tweets_influencer=cleaning_data_tweets_1
 
 """
 Financial dataset related (scrape, clean process, calculate daily return stuff
