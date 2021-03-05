@@ -55,7 +55,7 @@ path_raw_data=r''
 cleaning_data_path=r''
 
 """
-Mining tweets through Twint (Specific time range)
+Mining tweets through Twint (Specific time range) #改做爬不同的標的 不同天?
 """
 os.chdir(path_raw_data) #twint will save data to current directory, so we need to set directory
 
