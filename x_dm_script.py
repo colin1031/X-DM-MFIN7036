@@ -29,21 +29,35 @@ import pandas as pd
 import asyncio
 import nest_asyncio
 import glob
-
+from nltk.corpus import stopwords
+import nltk
+from textblob import TextBlob
+from numpy import nan
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 """
 Setting directory
 """
 os.getcwd()
 
-path=''path)
+path=''
+os.chdir(path)
 
 os.getcwd()
 
+"""
+Setting all the path
+"""
+
+#specific file to save those data
+path_raw_data=r''
+
+cleaning_data_path=r''
 
 """
 Mining tweets through Twint (Specific time range)
 """
+os.chdir(path_raw_data) #twint will save data to current directory, so we need to set directory
 
 #configuration
 config = twint.Config()
@@ -51,8 +65,8 @@ config.Search = ['Xrp' or "Ripple"] #if tweet include xrp or ripple (Capital let
 config.Lang = "en"
 config.Limit = 100000000000000000000
 
-start_date = '2020-10-01'
-timeperiod = 365
+start_date = '2020-03-01'
+timeperiod = 365+4
 
 start_timetime = datetime.datetime.strptime(start_date, '%Y-%m-%d')
 
@@ -95,10 +109,7 @@ print("--- %s seconds ---" % (time.time() - start_time_count))
 """
 Read raw data (tweets through Twint with specific time range) & concate those files into one large datafile
 """
-path_data=''
-
-
-all_files = glob.glob(mac_path_data + "/*.csv")
+all_files = glob.glob(path_raw_data + "/*.csv")
 
 li = []
 
@@ -108,45 +119,119 @@ for filename in all_files:
 
 raw_data_tweets_thro_twint = pd.concat(li, axis=0, ignore_index=True)
 
-raw_data_tweets_thro_twint.to_csv(path_data+os.sep+'raw_data_tweets.csv')
+raw_data_tweets_thro_twint.to_pickle(path_raw_data+os.sep+'raw_data_tweets.pickle')
 
 """
-Raw Data Cleaning
+Raw Data Cleaning and preprocessing
 """
-path_data=''
-
-raw_data_tweets=pd.read_csv(path_data+os.sep+'raw_data_tweets.csv')
+raw_data_tweets=pd.read_pickle(path_raw_data+os.sep+'raw_data_tweets.pickle')
 
 #check duplicate
 raw_data_tweets.drop_duplicates()
 
+#fix time in order to match the finacial data timezone
+def switch_tz(time, t=8):
+    return datetime.datetime.strptime(time[:19], '%Y-%m-%d %H:%M:%S') - datetime.timedelta(hours = t)
+
+raw_data_tweets['datetime'] = raw_data_tweets.created_at.apply(lambda x:switch_tz(x))
+
+raw_data_tweets['date']= raw_data_tweets.datetime.apply(lambda x:x.date())
+
+#check columns
 raw_data_tweets.columns
-extract_columns_list_cleaning_data_use=['created_at','date','time','username','tweet','language',\
+
+extract_columns_list_cleaning_data_use=['date','username','tweet','language',\
                                         'mentions','replies_count','retweets_count','likes_count','hashtags','cashtags','retweet'\
                                             ]
 
 cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
+#from 36 columns (raw data) drop to 11 columns now
+
+#save file for further step
+cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
 
 """
-tweets level 
+Read the data (check point)
 """
+cleaning_data_tweets_1=pd.read_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
+cleaning_data_tweets_1.iloc[1]
 
 """
+making different variable
+"""
+"""
+Counting mentions variable
+"""
+cleaning_data_tweets_mention=cleaning_data_tweets_1
+
+total_number_of_mentions_per_date=cleaning_data_tweets_mention.date.value_counts()
+
+different_language_number_of_mentions=cleaning_data_tweets_mention.groupby(['date','language']).size()
+
+#need to make time series data base on this e.g. en number of mention, hl number of mention
+
+"""
+Sentiment Vairable
+#cleaning and preprocessing (each tweets)
+"""
+
+cleaning_data_tweets_sentiment=cleaning_data_tweets_1
+stop_words = set(stopwords.words('english')) #get the stopword set
+tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
+tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
+
+#remove stopword and lowercase
+for sentence in cleaning_data_tweets_sentiment['tweet']:
+    try:
+        word_tokens = tokenizer.tokenize(sentence)
+        tokenized_and_stopword_removed_and_lowercased_sentences_list.append([w.lower() for w in word_tokens if not w in stop_words])  #lowercase all the words
+    except:
+        tokenized_and_stopword_removed_and_lowercased_sentences_list.append([nan])
+
+cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized_and_stopword_removed_and_lowercased_sentences_list]
+
+textblob_sentimentscore_list=[]
+nltk_sentimentscore_list=[]
+
+for sentence in cleaning_data_tweets_sentiment['stopword_punctuation_removed_and_lowercased_sentences']:
+    #using textblob
+    s = TextBlob(sentence).sentiment #assign sentiment score of that sentence
+    textblob_sentimentscore_list.append(s.polarity)
+
+    #using nltk
+    sid = SentimentIntensityAnalyzer()
+    nltk_sentimentscore_list.append(sid.polarity_scores(sentence)['compound']) #assign sentiment score of that sentence #only extract the compound score
+
+#add as new columns into dataframe
+cleaning_data_tweets_sentiment['polarty_score_with_textblob'] = textblob_sentimentscore_list 
+cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = nltk_sentimentscore_list
+
+"""
+influencer variable
 Extract number of followers from each user through Tweepy
 likes
-
 """
 
 """
-Grading tweets based on sentiments 
-
-試試不同的打分的方法
+Financial dataset related (scrape, clean process, calculate daily return stuff
 """
 
+
 """
-Time period level timeseries (dummy variab)
+Merge variable into financial time series dataset
 """
+
+
+
+
+
+
+
+
+
+
+
 
 
 """
