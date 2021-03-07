@@ -33,9 +33,11 @@ for day in range(1,1000):
     volatility.append(np.std(values[day:day+30], ddof=1))
 volatility = pd.DataFrame({'30 days volatility':volatility})
 
+# Price,return and volatility plotting
 ripple['Adj Close'].plot(grid=True, figsize=(8,5))
 daily_return.plot(grid=True, figsize=(8,5))
 volatility.plot(grid=True, figsize=(8,5))
+
 data_cleaning = pd.DataFrame({'Date':ripple['Date'],
                               'Adj Close':ripple['Adj Close'],
                               'daily return':daily_return})
