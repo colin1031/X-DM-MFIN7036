@@ -23,17 +23,24 @@ import
 """
 import os
 import datetime
+from datetime import datetime as dt
 import time
 import twint
 import pandas as pd
 import asyncio
 import nest_asyncio
 import glob
-from nltk.corpus import stopwords
 import nltk
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from numpy import nan
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from wordcloud import WordCloud
+import textstat
+import openpyxl
 
 """
 Setting directory
@@ -176,8 +183,154 @@ non_en_number_of_mentions_per_day=[total_number_of_mentions_per_date-en_number_o
 
 """
 Sentiment Vairable (Sun Yi)
-#cleaning and preprocessing (each tweets)
 """
+try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
+
+# split data into different weeks
+file_dir = './weekly/week_{}_data.pickle'
+for i in range(-1,364,7):
+    temp_df = try_df[(try_df['day_adjust']>=i) & (try_df['day_adjust']<=i+7)]
+    temp_df.to_pickle(file_dir.format(int((i+8)/7)),index = None)
+
+# time processing
+def adjust_day(mm):
+    date_T = []
+    for row_index, row in mm.iterrows():
+        d = row.day_x
+        h = row.date_time.hour
+        if h < 8:
+            d -= 1
+        date_T.append(d)   
+        print(row_index)
+        
+    mm = mm.assign(day_adjust = date_T)
+    return mm
+
+# clean the stop words & the syntax
+def cleaning(temp_str):  
+    sentence = temp_str.replace("."," ").replace("“","").replace('"',"").replace("'","").replace(",","").replace('‘',"'").replace("’s","").replace("•","").replace("-","").replace("#","").replace("+","").replace("●","").replace("https://t","")
+    wordlist = sentence.lower().split()   # user lower case
+    
+    #nltk.download('stopwords')
+    stopword = set(stopwords.words('english'))    
+    filtered_sentence = [] 
+    for w in wordlist: 
+        if w not in stopword: 
+            filtered_sentence.append(w) 
+    return filtered_sentence
+
+def stemming(filtered_sentence):
+   # nltk.download('wordnet')
+    lemma_word = []                              # stemming
+    wordnet_lemmatizer = WordNetLemmatizer()
+
+    for w in filtered_sentence:
+        word1 = wordnet_lemmatizer.lemmatize(w, pos = "n")
+        word2 = wordnet_lemmatizer.lemmatize(word1, pos = "v")
+        word3 = wordnet_lemmatizer.lemmatize(word2, pos = ("a"))
+        lemma_word.append(word3)
+        
+    return lemma_word    
+        
+def gen_worddict(temp_df):
+    temp_str = ''
+    for string in temp_df.tweet:
+        temp_str = temp_str + '' + string
+        
+    # cleaning
+    filtered_sentence = cleaning(temp_str)
+    # stemming
+    lemma_word = stemming(filtered_sentence)
+    
+    # worddict is what we need after all cleaning
+    worddict=dict()                               #  clean some left words
+    
+    for word in lemma_word:
+        worddict[word]=worddict.get(word,0)+1
+    #del worddict['The']
+    #del worddict['This']
+    
+    return worddict
+
+# use dictionary
+workbook=openpyxl.load_workbook("./LoughranMcDonald_SentimentWordLists_2018.xlsx") 
+Negative = workbook['Negative']
+Positive = workbook['Positive']
+Uncertainty = workbook['Uncertainty']
+
+def to_list(sheet):       # get the words in SentimentWordLists
+    listy = list()
+    for row in sheet.rows:
+        for cell in row:
+            listy.append(cell.value)
+    return listy
+
+negative = to_list(Negative)    
+positive = to_list(Positive)    
+uncertainty = to_list(Uncertainty) 
+
+# get sentiment vairables
+def get_matrix(day_x,data_1):
+    print('days',day_x, ' are aready adjusted!')
+    temp_df = data_1[data_1['day_adjust'] == day_x]
+    worddict = gen_worddict(temp_df)
+    
+    print('  -  worddict is aready done!')
+    
+    
+    post = 0      # number of positive words
+    neg = 0      # number of negative words
+    uncer = 0    # number of uncertainty words
+    for key in worddict:                 # calculate the number of words
+        if key.upper() in negative:
+            neg += worddict[key]
+            #print(key," is negative")
+        elif key.upper() in positive:
+            post += worddict[key]
+            #print(key," is positive")
+        elif key.upper() in uncertainty:
+            uncer += worddict[key]
+            #print(key," is uncertainty")
+        #else:
+            #print("sorry,this word is not work!——",key)
+            
+    numOfWords = 0
+    for word in worddict:
+        numOfWords += worddict[word]
+        
+    # martix 1
+    numOfSentense = len(temp_df)       # the number of sentense
+    news_sentiment = (post-neg)/numOfSentense
+    
+    complex_word = list()
+    numOfComplex = 0
+    for word in worddict:
+        if textstat.syllable_count(word)>=3:
+            complex_word.append(word)
+            numOfComplex += worddict[word]
+            #print(word,worddict[word])
+
+    Fog = 0.4*(numOfWords/numOfSentense+100*numOfComplex/numOfWords)   #Fog index
+    print("  -  Fog index is ",Fog)
+    return worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog
+
+week_list = list(range(-1,364,7))
+
+# process weekly data
+list_1 = list()
+for week in week_list:
+    td = pd.read_csv(file_dir.format(int((week+8)/7)))
+    day_list = list(range(week,week+7))
+    for day_x in day_list:
+        worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog = get_matrix(day_x,td)
+        list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfWords':numOfWords,'numOfComments':numOfSentense, 'News_sentiment': news_sentiment,'Fog index':Fog })
+
+kk = pd.DataFrame(list_1)
+kk.to_pickle('final_data_year.pickle')
+
+
+
+#cleaning and preprocessing (each tweets)
 
 cleaning_data_tweets_sentiment=cleaning_data_tweets_1
 cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
