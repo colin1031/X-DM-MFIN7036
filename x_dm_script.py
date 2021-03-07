@@ -182,17 +182,18 @@ en_number_of_mentions_per_day=en_number_of_mentions.groupby('date').size()
 
 non_en_number_of_mentions_per_day=[total_number_of_mentions_per_date-en_number_of_mentions_per_day]
 
+# cleaning and preprocessing (each tweets)
+cleaning_data_tweets_sentiment = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
+cleaning_data_tweets_sentiment_en_only = cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
 
 """
 Sentiment Vairable (Sun Yi)
 """
-try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
-
 # split data into different weeks
 file_dir = './weekly/week_{}_data.pickle'
-for i in range(-1,364,7):
-    temp_df = try_df[(try_df['day_adjust']>=i) & (try_df['day_adjust']<=i+7)]
-    temp_df.to_pickle(file_dir.format(int((i+8)/7)),index = None)
+for i in range(-1,368,7):
+    temp = cleaning_data_tweets_sentiment_en_only[(cleaning_data_tweets_sentiment_en_only['day_adjust'] >= i) & (cleaning_data_tweets_sentiment_en_only['day_adjust'] <= i+7)]
+    temp.to_pickle(file_dir.format(int((i+8)/7)), index = None)
 
 # time processing
 def adjust_day(mm):
@@ -330,9 +331,6 @@ for week in week_list:
 sentiment_scores_sheet = pd.DataFrame(list_1)
 
 ## use other scoring methods
-# cleaning and preprocessing (each tweets)
-cleaning_data_tweets_sentiment = cleaning_data_tweets_1
-cleaning_data_tweets_sentiment_en_only = cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
 stop_words = set(stopwords.words('english')) #get the stopword set
 tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
 tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
