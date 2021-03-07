@@ -161,7 +161,9 @@ cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets
 """
 Read the data (check point)
 """
-cleaning_data_tweets_1=pd.read_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
+cleaning_data_tweets_1=pd.read_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle', ,engine='python')
+# #due with DtypeWarning: Columns (9) have mixed types.Specify dtype option on import or set low_memory=False. has_raised = await self.run_ast_nodes(code_ast.body, cell_name,
+# #it might generate extra row, to avoid this
 cleaning_data_tweets_1.iloc[1]
 
 """
@@ -325,20 +327,17 @@ for week in week_list:
         worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog = get_matrix(day_x,td)
         list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfWords':numOfWords,'numOfComments':numOfSentense, 'News_sentiment': news_sentiment,'Fog index':Fog })
 
-kk = pd.DataFrame(list_1)
-kk.to_pickle('final_data_year.pickle')
+sentiment_scores_sheet = pd.DataFrame(list_1)
 
-
-
-#cleaning and preprocessing (each tweets)
-
-cleaning_data_tweets_sentiment=cleaning_data_tweets_1
-cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
+## use other scoring methods
+# cleaning and preprocessing (each tweets)
+cleaning_data_tweets_sentiment = cleaning_data_tweets_1
+cleaning_data_tweets_sentiment_en_only = cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
 stop_words = set(stopwords.words('english')) #get the stopword set
 tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
 tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
 
-#remove stopword and lowercase
+# remove stopword and lowercase
 for sentence in cleaning_data_tweets_sentiment['tweet']:
     try:
         word_tokens = tokenizer.tokenize(sentence)
@@ -360,9 +359,11 @@ for sentence in cleaning_data_tweets_sentiment['fixed_tweets']:
     sid = SentimentIntensityAnalyzer()
     nltk_sentimentscore_list.append(sid.polarity_scores(sentence)['compound']) #assign sentiment score of that sentence #only extract the compound score
 
-#add as new columns into dataframe
-cleaning_data_tweets_sentiment['polarty_score_with_textblob'] = textblob_sentimentscore_list 
-cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = nltk_sentimentscore_list
+# add as new columns into dataframe
+sentiment_scores_sheet['polarty_score_with_textblob'] = textblob_sentimentscore_list 
+sentiment_scores_sheet['polarty_score_with_nltk'] = nltk_sentimentscore_list
+
+sentiment_scores_sheet.to_pickle('sentiment_scores_sheet.pickle')
 
 """
 influencer variable (Fong Fong)
