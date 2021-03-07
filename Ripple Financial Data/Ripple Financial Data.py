@@ -13,7 +13,7 @@ from pandas_datareader import data, wb
 Get data from YahooFinance
 """
 stock_code = 'XRP-USD'
-start_date = "2020-03-01"
+start_date = "2020-01-01"
 end_date = "2021-03-05"
 ripple = data.get_data_yahoo(stock_code, start_date, end_date)
 ripple.to_csv(r'C:\Users\Zongyu Lyu\Desktop\Raw Ripple Price.csv')
@@ -29,11 +29,12 @@ daily_return = ripple['Adj Close'].pct_change(1)
 # volatility for every 30 days windows
 values = daily_return.values
 volatility = []
-for day in range(1,1000):
-    if day+30 > len(values) - 1:
+for day in range(31,len(values)):
+    if day > len(values) - 1:
         break
-    volatility.append(np.std(values[day:day+30], ddof=1))
-volatility = pd.DataFrame({'30 days volatility':volatility})
+    volatility.append(np.std(values[day-30:day], ddof=1))
+match_row = list(range(31))+volatility
+volatility = pd.DataFrame({'30 days volatility':match_row})
 
 # Price,return and volatility plotting
 ripple['Adj Close'].plot(grid=True, figsize=(8,5))
