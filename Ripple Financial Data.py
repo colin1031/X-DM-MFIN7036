@@ -16,7 +16,7 @@ stock_code = 'XRP-USD'
 start_date = "2020-03-01"
 end_date = "2021-03-05"
 ripple = data.get_data_yahoo(stock_code, start_date, end_date)
-ripple.to_csv(r'C:\Users\Zongyu Lyu\Desktop\Raw Ripple price.csv')
+ripple.to_csv(r'C:\Users\Zongyu Lyu\Desktop\Raw Ripple Price.csv')
 
 """
 Calculate daily return and volatility for every 30 days windows
