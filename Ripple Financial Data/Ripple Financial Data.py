@@ -51,7 +51,7 @@ cleaned_data = cleaned[61:428]
 cleaned_data['Adj Close'].plot(grid=True, figsize=(8,5))
 cleaned_data['daily return'].plot(grid=True, figsize=(8,5))
 cleaned_data['30 days volatility'].plot(grid=True, figsize=(8,5))
-cleaned.to_csv(r'C:\Users\Zongyu Lyu\Desktop\Cleaned Ripple Financial Data.csv',index=False)
+cleaned_data.to_csv(r'C:\Users\Zongyu Lyu\Desktop\Cleaned Ripple Financial Data.csv',index=False)
 
 
 
