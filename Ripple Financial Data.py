@@ -23,19 +23,21 @@ Calculate daily return and volatility for every 30 days windows
 """
 ripple = pd.read_csv(r'C:\Users\Zongyu Lyu\Desktop\Raw Ripple Price.csv')
 daily_return = ripple['Adj Close'].pct_change(1)
-# daily return
+# Daily return
 values = daily_return.values
-# volatility for every 30 days windows
+# Volatility for every 30 days windows
 volatility = []
 for day in range(1,1000):
     if day+30 > len(values) - 1:
         break
     volatility.append(np.std(values[day:day+30], ddof=1))
 volatility = pd.DataFrame({'30 days volatility':volatility})
-
+# Plotting
 ripple['Adj Close'].plot(grid=True, figsize=(8,5))
 daily_return.plot(grid=True, figsize=(8,5))
 volatility.plot(grid=True, figsize=(8,5))
+
+# Data cleaning
 data_cleaning = pd.DataFrame({'Date':ripple['Date'],
                               'Adj Close':ripple['Adj Close'],
                               'daily return':daily_return})
