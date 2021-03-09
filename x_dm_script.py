@@ -19,11 +19,11 @@ pip install nest_asyncio
 """
 
 """
-import
+import all the module and package we need
 """
 import os
 import datetime
-from datetime import datetime as dt
+import statsmodels.formula.api as smf
 import time
 import twint
 import pandas as pd
@@ -31,6 +31,10 @@ import asyncio
 import nest_asyncio
 import glob
 import nltk
+import textstat
+import openpyxl
+import statsmodels.formula.api as smf
+import numpy as np
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 from nltk.stem import PorterStemmer
@@ -39,8 +43,13 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from numpy import nan
 from wordcloud import WordCloud
-import textstat
-import openpyxl
+from datetime import datetime as dt
+from matplotlib import pyplot
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.datasets import make_regression
+from sklearn.svm import SVR
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import learning_curve
 
 """
 Setting directory
@@ -377,40 +386,125 @@ Financial dataset related (scrape, clean process, calculate daily return stuff (
 
 
 """
-Merge variable into financial time series dataset & export as pickle
+merge financial data and sentiment variable and number of counts
 """
+# read ripple financial data   
+financial_data_path='/Users/colinko/Documents/Colin/HKU/7036/X-dm/financial_data'
+xrp_data = pd.read_pickle(financial_data_path+os.sep+'Cleaned Ripple Financial Data.pickle').reset_index()
+
+#this data included number of counts already
+sentiment_data=pd.read_csv(cleaning_data_path+os.sep+'sentiment_variable_data.csv',parse_dates=['date']) # semmes already hv number of counts
+sentiment_data.rename(columns={'date':'Date'},inplace=True)
 
 
+all_data = pd.merge(xrp_data, sentiment_data,
+                    on='Date')
 
-
-
-
-
-
-
-
-
-
-
-"""
-新的dataset  based on tweest dataset
-3 dims
-(提及量,火熱dummy), (重要dummy), (正面/中性/負面時期)
-
-每天的提及量 (group by) & Generating a dummy variable (1 rep heat period, 0 rep non) ?
-全language mention, eng/non english, eng/chinese/etc 三種都加進去 看哪個有法
-
-
-Generating a dummy variable (1 rep impactful tweet, o rep non)
-Generating a dummy variable (1 rep positive emotion, 0 rep negative emotion)
-Generating lag variable (t-1) (number of mention mentions ) 昨天會不會影響今天的
+all_data.columns
+all_data['textblob_score_lag_1d'] = all_data['polarty_score_with_textblob'].shift(1)
+all_data['nltk_score_lag_1d'] = all_data['polarty_score_with_nltk'].shift(1)
+all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
+all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
 
 """
+different regression
+"""
+Y_list=['daily_return','volatility_30_days']
+sentiment_score_list=["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d"]
+for y in Y_list:
+    for sentiment_score in sentiment_score_list:
+        print(smf.ols('{} ~ {}'.format(y,sentiment_score), all_data).fit().summary())
+        
+#siginifiance in volatility, but not return
+        
+#only number of counts?
+for y in Y_list:
+    print(smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data).fit().summary())
+
+#siginifiance in volatility, but not return
+
+#also control number of counts?
+for y in Y_list:
+    for sentiment_score in sentiment_score_list:
+        print(smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data).fit().summary())
+
+#Can we this regression to predict tmr return (4 day for testing)
+result_list=[]
+for y in Y_list:
+    for sentiment_score in sentiment_score_list:
+        a=smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-65:]['daily_return']
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]
+        mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
+        result_list.append({"{},{},MSE_testing".format(y,sentiment_score):mse_testing})
+
+#in return, 'daily_return,nltk_score_lag_1d,MSE_testing' lowest
+#in volatility,  'volatility_30_days,nltk_score_lag_1d,MSE_testing' lowest
+
+#also control number of mentions? Multi vairable -regression model
+for y in Y_list:
+    for sentiment_score in sentiment_score_list:
+        a=smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-65:]['daily_return']
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-65:]["numOfComments_lag_1d"]
+        mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
+        result_list.append({"{},{},'numOfComments_lag_1d'".format(y,sentiment_score):mse_testing})
+
+# control for number of mentions, testing mse work  better than single (return) "daily_return,textblob_score_lag_1d,'numOfComments_lag_1d'": 0.007284506071957778
+# volatility_30_days does hv improvement  {'volatility_30_days,nltk_score_lag_1d,MSE_testing': 0.011329415500966729},
+
+"""""
+Machine learning (Sentiment to Y)
+"""""
+
+"""
+random forest
+"""
+# drop for further setting features use
+all_data_rondom_forest=all_data.drop(['day','Fog index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+all_data_rondom_forest.columns
+# Convert to numpy array
+all_data_rondom_forest=all_data_rondom_forest.dropna()
+features= all_data_rondom_forest.iloc[:,3:]
+features.columns
+features = np.array(features)
+train_features = features[:-65]
+test_features = features[-65:]
+
+for y in Y_list:
+    # Labels are the values we want to predict
+    labels = np.array(all_data_rondom_forest['{}'.format(y)]) #'volatility_30_days'
+    # Saving feature names for later use
+    train_labels = labels[:-65]
+    test_labels = labels[-65:]
+    # Instantiate model with 1000 decision trees
+    rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
+    # Train the model on training data
+    rf.fit(train_features, train_labels)
+    # Use the forest's predict method on the test data
+    predictions = rf.predict(test_features)
+    # Calculate the absolute errors
+    mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
+    #mse for machine learning
+    result_list.append({"{},random_forest".format(y):mse_testing})
 
 
 """
-concate/merge (financial data 跟 twitter 新的dataset )
+SVM (SVR)
 """
+mse_from_SVR=[]
+all_data_SVR=all_data.dropna()
+#初始化SVR
+for y in Y_list:
+    svr = GridSearchCV(SVR(kernel='rbf', gamma=0.1), cv=5,
+                       param_grid={"C": [1e0, 1e1, 1e2, 1e3],
+                                   "gamma": np.logspace(-2, 2, 5)})
+    
+    svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
+    
+    y_svr = svr.predict(all_data_SVR.iloc[-65:,3:])
+    result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["daily_return"].iloc[-65:],y_svr)).mean()})
+
 
 """ (volatility and price change)
 分析 regression
