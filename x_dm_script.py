@@ -176,22 +176,9 @@ cleaning_data_tweets_1.iloc[1]
 """
 making different variable
 """
-"""
-Counting mentions variable (Colin)
-"""
-cleaning_data_tweets_mention=cleaning_data_tweets_1
-
-total_number_of_mentions_per_date=cleaning_data_tweets_mention.date.value_counts()
-
-en_number_of_mentions=cleaning_data_tweets_mention[cleaning_data_tweets_mention['language']=='en']
-en_number_of_mentions_per_day=en_number_of_mentions.groupby('date').size()
-#seems like 'en' size too small
-
-non_en_number_of_mentions_per_day=[total_number_of_mentions_per_date-en_number_of_mentions_per_day]
-
 
 """
-Sentiment Vairable (Sun Yi)
+Sentiment Vairable (Sun Yi) Counting mentions variable  (numOfSentence)
 """
 try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
 
@@ -339,7 +326,7 @@ kk.to_pickle('final_data_year.pickle')
 
 
 
-#cleaning and preprocessing (each tweets)
+#senteniment score with nltk and textblob
 
 cleaning_data_tweets_sentiment=cleaning_data_tweets_1
 cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
@@ -357,28 +344,10 @@ for sentence in cleaning_data_tweets_sentiment['tweet']:
 
 cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized_and_stopword_removed_and_lowercased_sentences_list]
 
-textblob_sentimentscore_list=[]
-nltk_sentimentscore_list=[]
-
-for sentence in cleaning_data_tweets_sentiment['fixed_tweets']:
-    #using textblob
-    s = TextBlob(sentence).sentiment #assign sentiment score of that sentence
-    textblob_sentimentscore_list.append(s.polarity)
-
-    #using nltk
-    sid = SentimentIntensityAnalyzer()
-    nltk_sentimentscore_list.append(sid.polarity_scores(sentence)['compound']) #assign sentiment score of that sentence #only extract the compound score
-
-#add as new columns into dataframe
-cleaning_data_tweets_sentiment['polarty_score_with_textblob'] = textblob_sentimentscore_list 
-cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = nltk_sentimentscore_list
-
-"""
-influencer variable (Fong Fong)
-Extract number of followers from each user through Tweepy
-likes
-"""
-cleaning_data_tweets_influencer=cleaning_data_tweets_1
+cleaning_data_tweets_sentiment['polarty_score_with_textblob']= [TextBlob(sentence).sentiment.polarity for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
+#nltk
+sid = SentimentIntensityAnalyzer()
+cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = [sid.polarity_scores(sentence)['compound'] for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
 
 """
 Financial dataset related (scrape, clean process, calculate daily return stuff (lyu)
@@ -506,12 +475,6 @@ for y in Y_list:
     result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["daily_return"].iloc[-65:],y_svr)).mean()})
 
 
-""" (volatility and price change)
-分析 regression
-1.單變量 一個一個套
-2.三變量 
-3. 把其他金融變量加進去 
-"""
 
 """ (volatility and price change)
 用圖分析
