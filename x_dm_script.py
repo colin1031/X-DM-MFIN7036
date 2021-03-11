@@ -71,7 +71,7 @@ path_raw_data=r''
 cleaning_data_path=r''
 
 """
-Mining tweets through Twint (Specific time range) #改做爬不同的標的 不同天?
+Mining tweets through Twint (Specific time range) 
 """
 os.chdir(path_raw_data) #twint will save data to current directory, so we need to set directory
 
@@ -173,9 +173,6 @@ Read the data (check point)
 cleaning_data_tweets_1=pd.read_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
 cleaning_data_tweets_1.iloc[1]
 
-"""
-making different variable
-"""
 
 """
 Sentiment Vairable (Sun Yi) Counting mentions variable  (numOfSentence)
@@ -476,21 +473,3 @@ for y in Y_list:
 
 
 
-""" (volatility and price change)
-用圖分析
-對比同時期
-"""
-
-"""
-預測
-(volatility and price change)
-用machine learning 找出最好的model(regression model 的machine learning)
-"""
-
-"""
-根據這些因子做個backtesting (quant trading)
-"""
-
-"""
-Extra goals
-"""
