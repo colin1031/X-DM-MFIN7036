@@ -23,6 +23,7 @@ import all the module and package we need
 """
 import os
 import datetime
+from datetime import datetime as dt
 import statsmodels.formula.api as smf
 import time
 import twint
@@ -240,13 +241,11 @@ def gen_worddict(temp_df):
     
     for word in lemma_word:
         worddict[word]=worddict.get(word,0)+1
-    #del worddict['The']
-    #del worddict['This']
     
     return worddict
 
 # use dictionary
-workbook=openpyxl.load_workbook("./LoughranMcDonald_SentimentWordLists_2018.xlsx") 
+workbook = openpyxl.load_workbook("./LoughranMcDonald_SentimentWordLists_2018.xlsx") 
 Negative = workbook['Negative']
 Positive = workbook['Positive']
 Uncertainty = workbook['Uncertainty']
@@ -284,8 +283,6 @@ def get_matrix(day_x,data_1):
         elif key.upper() in uncertainty:
             uncer += worddict[key]
             #print(key," is uncertainty")
-        #else:
-            #print("sorry,this word is not work!——",key)
             
     numOfWords = 0
     for word in worddict:
@@ -305,7 +302,20 @@ def get_matrix(day_x,data_1):
 
     Fog = 0.4*(numOfWords/numOfSentense+100*numOfComplex/numOfWords)   #Fog index
     print("  -  Fog index is ",Fog)
-    return worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog
+    
+    polarty_score_with_textblob = 0
+    polarty_score_with_nltk = 0
+
+    for sentence in temp_df['tweet']:
+        #using textblob
+        s = TextBlob(sentence).sentiment #assign sentiment score of that sentence
+        polarty_score_with_textblob += s.polarity / numOfSentense
+    
+        #using nltk
+        sid = SentimentIntensityAnalyzer()
+        polarty_score_with_nltk += sid.polarity_scores(sentence)['compound'] / numOfSentense      #assign sentiment score of that sentence #only extract the compound score
+    
+    return worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog, polarty_score_with_textblob, polarty_score_with_nltk
 
 week_list = list(range(-1,364,7))
 
@@ -325,26 +335,26 @@ kk.to_pickle('final_data_year.pickle')
 
 #senteniment score with nltk and textblob
 
-cleaning_data_tweets_sentiment=cleaning_data_tweets_1
-cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
-stop_words = set(stopwords.words('english')) #get the stopword set
-tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
-tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
+# cleaning_data_tweets_sentiment=cleaning_data_tweets_1
+# cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
+# stop_words = set(stopwords.words('english')) #get the stopword set
+# tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
+# tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
 
-#remove stopword and lowercase
-for sentence in cleaning_data_tweets_sentiment['tweet']:
-    try:
-        word_tokens = tokenizer.tokenize(sentence)
-        tokenized_and_stopword_removed_and_lowercased_sentences_list.append([w.lower() for w in word_tokens if not w in stop_words])  #lowercase all the words
-    except:
-        tokenized_and_stopword_removed_and_lowercased_sentences_list.append([nan])
+# #remove stopword and lowercase
+# for sentence in cleaning_data_tweets_sentiment['tweet']:
+#     try:
+#         word_tokens = tokenizer.tokenize(sentence)
+#         tokenized_and_stopword_removed_and_lowercased_sentences_list.append([w.lower() for w in word_tokens if not w in stop_words])  #lowercase all the words
+#     except:
+#         tokenized_and_stopword_removed_and_lowercased_sentences_list.append([nan])
 
-cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized_and_stopword_removed_and_lowercased_sentences_list]
+# cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized_and_stopword_removed_and_lowercased_sentences_list]
 
-cleaning_data_tweets_sentiment['polarty_score_with_textblob']= [TextBlob(sentence).sentiment.polarity for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
-#nltk
-sid = SentimentIntensityAnalyzer()
-cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = [sid.polarity_scores(sentence)['compound'] for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
+# cleaning_data_tweets_sentiment['polarty_score_with_textblob']= [TextBlob(sentence).sentiment.polarity for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
+# #nltk
+# sid = SentimentIntensityAnalyzer()
+# cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = [sid.polarity_scores(sentence)['compound'] for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
 
 """
 Financial dataset related (scrape, clean process, calculate daily return stuff (lyu)
