@@ -364,29 +364,6 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing ))
 
 plt.show()
 
-#senteniment score with nltk and textblob
-
-# cleaning_data_tweets_sentiment=cleaning_data_tweets_1
-# cleaning_data_tweets_sentiment_en_only=cleaning_data_tweets_sentiment[cleaning_data_tweets_sentiment['language']=='en']
-# stop_words = set(stopwords.words('english')) #get the stopword set
-# tokenized_and_stopword_removed_and_lowercased_sentences_list=[]
-# tokenizer = nltk.RegexpTokenizer(r"\w+") #using RegexpTokenizer to tokenize and remove all punctuation marks
-
-# #remove stopword and lowercase
-# for sentence in cleaning_data_tweets_sentiment['tweet']:
-#     try:
-#         word_tokens = tokenizer.tokenize(sentence)
-#         tokenized_and_stopword_removed_and_lowercased_sentences_list.append([w.lower() for w in word_tokens if not w in stop_words])  #lowercase all the words
-#     except:
-#         tokenized_and_stopword_removed_and_lowercased_sentences_list.append([nan])
-
-# cleaning_data_tweets_sentiment['fixed_tweets'] = [' '.join(i) for i in tokenized_and_stopword_removed_and_lowercased_sentences_list]
-
-# cleaning_data_tweets_sentiment['polarty_score_with_textblob']= [TextBlob(sentence).sentiment.polarity for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
-# #nltk
-# sid = SentimentIntensityAnalyzer()
-# cleaning_data_tweets_sentiment['polarty_score_with_nltk'] = [sid.polarity_scores(sentence)['compound'] for sentence in cleaning_data_tweets_sentiment['fixed_tweets']]
-
 """
 Financial dataset related (scrape, clean process, calculate daily return stuff (lyu)
 """
