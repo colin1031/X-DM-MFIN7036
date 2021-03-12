@@ -499,7 +499,6 @@ for y in Y_list:
 """
 SVM (SVR)
 """
-mse_from_SVR=[]
 all_data_SVR=all_data.dropna()
 #初始化SVR
 for y in Y_list:
