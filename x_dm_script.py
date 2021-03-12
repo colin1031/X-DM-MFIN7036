@@ -144,8 +144,8 @@ Raw Data Cleaning and preprocessing
 """
 raw_data_tweets=pd.read_pickle(path_raw_data+os.sep+'raw_data_tweets.pickle')
 
-#check duplicate
-raw_data_tweets.drop_duplicates()
+#check duplicates and drop duplicates
+raw_data_tweets.drop_duplicates(inplace=True)
 
 #fix time in order to match the finacial data timezone
 def switch_tz(time, t=8):
@@ -163,8 +163,6 @@ extract_columns_list_cleaning_data_use=['date','user_id','tweet','language']
 cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
 #from 36 columns (raw data) drop to 4 columns now
-
-cleaning_data_tweets_1.drop_duplicates(inplace=True)
 
 #save file for further step
 cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
