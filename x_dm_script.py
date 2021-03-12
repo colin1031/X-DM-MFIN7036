@@ -49,7 +49,6 @@ from matplotlib import pyplot
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import make_regression
 from sklearn.svm import SVR
-from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import learning_curve
 
 """
@@ -157,13 +156,11 @@ raw_data_tweets['date']= raw_data_tweets.datetime.apply(lambda x:x.date())
 #check columns
 raw_data_tweets.columns
 
-extract_columns_list_cleaning_data_use=['date','username','tweet','language',\
-                                        'mentions','replies_count','retweets_count','likes_count','hashtags','cashtags','retweet'\
-                                            ]
+extract_columns_list_cleaning_data_use=['date','tweet','language']
 
 cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
-#from 36 columns (raw data) drop to 11 columns now
+#from 36 columns (raw data) drop to 3 columns now
 
 #save file for further step
 cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
@@ -506,9 +503,7 @@ mse_from_SVR=[]
 all_data_SVR=all_data.dropna()
 #初始化SVR
 for y in Y_list:
-    svr = GridSearchCV(SVR(kernel='rbf', gamma=0.1), cv=5,
-                       param_grid={"C": [1e0, 1e1, 1e2, 1e3],
-                                   "gamma": np.logspace(-2, 2, 5)})
+    svr = SVR(kernel='rbf', epsilon=0.05)
     
     svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
     
