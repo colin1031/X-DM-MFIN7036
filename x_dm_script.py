@@ -513,7 +513,7 @@ for y in Y_list:
     svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
     
     y_svr = svr.predict(all_data_SVR.iloc[-65:,3:])
-    result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["daily_return"].iloc[-65:],y_svr)).mean()})
+    result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-65:],y_svr)).mean()})
 
 
 
