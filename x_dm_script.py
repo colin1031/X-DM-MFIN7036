@@ -50,6 +50,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import make_regression
 from sklearn.svm import SVR
 from sklearn.model_selection import learning_curve
+from sklearn import linear_model
+
 
 """
 Setting directory
@@ -500,7 +502,7 @@ for y in Y_list:
 SVM (SVR)
 """
 all_data_SVR=all_data.dropna()
-#初始化SVR
+
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05)
     
@@ -509,5 +511,16 @@ for y in Y_list:
     y_svr = svr.predict(all_data_SVR.iloc[-65:,3:])
     result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-65:],y_svr)).mean()})
 
+    
+"""
+Lasso regression (machine learning)
+"""
+all_data_lasso=all_data.dropna()
+for y in Y_list:
+    clf = linear_model.Lasso(alpha=0.1)
+    clf.fit(all_data_lasso.iloc[:-65,3:], all_data_lasso["{}".format(y)].iloc[:-65])
+    y_lasso=clf.predict(all_data_lasso.iloc[-65:,3:])
+    
+    result_list.append({"{},lasso".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-65:],y_lasso)).mean()})
 
 
