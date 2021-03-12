@@ -158,11 +158,11 @@ raw_data_tweets['date']= raw_data_tweets.datetime.apply(lambda x:x.date())
 #check columns
 raw_data_tweets.columns
 
-extract_columns_list_cleaning_data_use=['date','tweet','language']
+extract_columns_list_cleaning_data_use=['date','user_id','tweet','language']
 
 cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
-#from 36 columns (raw data) drop to 3 columns now
+#from 36 columns (raw data) drop to 4 columns now
 
 #save file for further step
 cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
