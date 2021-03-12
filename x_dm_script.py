@@ -164,6 +164,8 @@ cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
 #from 36 columns (raw data) drop to 4 columns now
 
+cleaning_data_tweets_1.drop_duplicates(inplace=True)
+
 #save file for further step
 cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
 
