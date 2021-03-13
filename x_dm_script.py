@@ -429,7 +429,7 @@ result_list=[]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         a=smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
-        next_y = all_data.iloc[-65:]['daily_return']
+        next_y = all_data.iloc[-65:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},MSE_testing".format(y,sentiment_score):mse_testing})
@@ -437,11 +437,19 @@ for y in Y_list:
 #in return, 'daily_return,nltk_score_lag_1d,MSE_testing' lowest
 #in volatility,  'volatility_30_days,nltk_score_lag_1d,MSE_testing' lowest
 
+#predict with only mentions count
+for y in Y_list:
+        a=smf.ols('{} ~ {}'.format(y,numOfComments_lag_1d), all_data[:-65]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-65:]['{}'.format(y)]
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(numOfComments_lag_1d)]
+        mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
+        result_list.append({"{},{},MSE_testing".format(y,numOfComments_lag_1d):mse_testing})
+
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         a=smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
-        next_y = all_data.iloc[-65:]['daily_return']
+        next_y = all_data.iloc[-65:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-65:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},'numOfComments_lag_1d'".format(y,sentiment_score):mse_testing})
@@ -469,7 +477,7 @@ test_features = features[-65:]
 
 for y in Y_list:
     # Labels are the values we want to predict
-    labels = np.array(all_data_rondom_forest['{}'.format(y)]) #'volatility_30_days'
+    labels = np.array(all_data_rondom_forest['{}'.format(y)])
     # Saving feature names for later use
     train_labels = labels[:-65]
     test_labels = labels[-65:]
