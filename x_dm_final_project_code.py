@@ -544,14 +544,18 @@ for y in Y_list:
 SVM (SVR)
 """
 all_data_SVR=all_data_ml_sentiment_Y.dropna()
-
+                      
+svr_training_x=all_data_SVR.iloc[:-35,3:]
+svr_testing_x=all_data_SVR.iloc[-35:,3:]
+                      
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
+    svr_training_y=all_data_SVR["{}".format(y)].iloc[:-35]
+    svr.fit(svr_training_x,svr_training_y)
     
-    svr.fit(all_data_SVR.iloc[:-35,3:], all_data_SVR["{}".format(y)].iloc[:-35])
-    
-    y_svr = svr.predict(all_data_SVR.iloc[-35:,3:])
-    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-35:],y_svr)).mean()})
+    y_svr = svr.predict(svr_testing_x)
+    svr_testing_y=all_data_SVR["{}".format(y)].iloc[-35:]
+    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
 
     
 """
