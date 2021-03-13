@@ -92,7 +92,7 @@ start_time_count = time.time()
 
 for i in range(timeperiod):
     
-    try;
+    try:
         since = (start_timetime + datetime.timedelta(days = i)).strftime('%Y-%m-%d')
         until = (start_timetime + datetime.timedelta(days = i+1)).strftime('%Y-%m-%d')
 
@@ -439,11 +439,11 @@ for y in Y_list:
 
 #predict with only mentions count
 for y in Y_list:
-        a=smf.ols('{} ~ {}'.format(y,numOfComments_lag_1d), all_data[:-65]).fit().summary2().tables[1]
+        a=smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-65]).fit().summary2().tables[1]
         next_y = all_data.iloc[-65:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(numOfComments_lag_1d)]
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['numOfComments_lag_1d']
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},mse_testing".format(y,numOfComments_lag_1d):mse_testing})
+        result_list.append({"{},numOfComments_lag_1d,mse_testing".format(y):mse_testing})
 
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
