@@ -380,6 +380,10 @@ kk.drop(kk.columns[0], axis = 1, inplace = True)
 kk['Date'] = dates
 kk.set_index(['Date'], inplace=True)
 
+
+"""
+Financial dataset related (calculate 30 days volatility, etc.)
+"""
 # merge financial data
 ripple = pd.read_csv('XRP_USD Historical Data.csv')
 
@@ -393,6 +397,9 @@ for day in range(30, len(daily_return)):
     daily_return['volatility_30_days'].iloc[day] = np.std(daily_return.daily_return.iloc[day-30:day])
 daily_return = daily_return.dropna()
 
+"""
+merge financial data and sentiment data
+"""
 result = pd.merge(kk, daily_return, on=['Date'])
 
 result.to_csv('./final_data.csv')  
@@ -431,10 +438,6 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing ))
 
 plt.show()
 
-"""
-Financial dataset related (scrape, clean process, calculate daily return stuff
-"""
-
 
 """
 Read merged data (financial data and sentiment data)
@@ -447,7 +450,7 @@ all_data['textblob_score_lag_1d'] = all_data['polarty_score_with_textblob'].shif
 all_data['nltk_score_lag_1d'] = all_data['polarty_score_with_nltk'].shift(1)
 all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
 all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
-all_data['Fog index_lag_1d']=all_data['Fog index'].shift(1)
+all_data['Fog_index_lag_1d']=all_data['Fog_index'].shift(1)
 
 
 """
