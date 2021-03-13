@@ -562,12 +562,17 @@ for y in Y_list:
 Lasso regression (machine learning)
 """
 all_data_lasso=all_data_ml_sentiment_Y.dropna()
+lasso_training_x=all_data_lasso.iloc[:-35,3:]
+lasso_testing_x=all_data_lasso.iloc[-35:,3:]
 for y in Y_list:
     clf = linear_model.Lasso(alpha=0.1)
-    clf.fit(all_data_lasso.iloc[:-35,3:], all_data_lasso["{}".format(y)].iloc[:-35])
-    y_lasso=clf.predict(all_data_lasso.iloc[-35:,3:])
-    
-    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-35:],y_lasso)).mean()})
+    lasso_training_y= all_data_lasso["{}".format(y)].iloc[:-35]
+    clf.fit(all_data_lasso,lasso_training_y)
+    y_lasso=clf.predict(lasso_testing_x)
+                      
+    lasso_testing_y= all_data_lasso["{}".format(y)].iloc[-35:]
+
+    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
 
 """
 Text directly apply machine learning to predict Y (fong)
