@@ -368,7 +368,7 @@ ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing ))
 plt.show()
 
 """
-Financial dataset related (scrape, clean process, calculate daily return stuff (lyu)
+Financial dataset related (scrape, clean process, calculate daily return stuff
 """
 
 
@@ -503,4 +503,9 @@ for y in Y_list:
     
     result_list.append({"{},lasso".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-65:],y_lasso)).mean()})
 
+"""
+After we find out the best prediction model (from sentiment to return/30 days volatility
+"""
+#fit the model with whole data set
 
+#plot
