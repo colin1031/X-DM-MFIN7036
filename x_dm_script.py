@@ -424,6 +424,9 @@ for y in Y_list:
     for sentiment_score in sentiment_score_list:
         print(smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data).fit().summary())
 
+"""
+Prediction with regression (sentiment to Y)
+"""
 #Can we this regression to predict tmr return (4 day for testing)
 result_list=[]
 for y in Y_list:
