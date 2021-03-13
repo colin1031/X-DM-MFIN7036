@@ -506,73 +506,109 @@ for y in Y_list:
 """""
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
 """""
-# drop for further setting features use
-all_data_ml_sentiment_Y=all_data.drop(['day','Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+
+xrp_data = pd.read_csv('merge_data.csv')[['Date', 'daily_return', 'volatility_30_days']].reset_index()
+lsa_data = pd.read_csv('lsa_data.csv', index_col=0).reset_index()
+
+ml_data = pd.merge(xrp_data, lsa_data, on='index').drop(columns='index')
+
+'''
+prepare ml training and testing data
+'''
+
+# Saving feature names for later use
+#all sample start from 2020-03-02
+features = ml_data.iloc[:,3:].shift(1) 
+
+# Convert to numpy array
+features = np.array(features)
+
+# Labels are the values we want to predict
+labels_ret = np.array(ml_data['daily_return']) #'daily_return'
+labels_vol = np.array(ml_data['volatility_30_days']) #'volatility_30_days'
+
+
+#split last 35 days for test sample
+train_features = features[1:-35]
+train_labels_ret = labels_ret[1:-35]
+train_labels_vol = labels_vol[1:-35]
+
+test_features = features[-35:]
+test_labels_ret = labels_ret[-35:]
+test_labels_vol = labels_vol[-35:]
+
 """
 random forest
 """
 
-all_data_rondom_forest=all_data_ml_sentiment_Y
-all_data_rondom_forest.columns
-# Convert to numpy array
-all_data_rondom_forest=all_data_rondom_forest.dropna()
-features= all_data_rondom_forest.iloc[:,3:]
-features.columns
-features = np.array(features)
-train_features = features[:-35]
-test_features = features[-35:]
+# Instantiate model with 1000 decision trees
+rf_ret = RandomForestRegressor(n_estimators = 100, random_state = 10)
+rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
+# Train the model on training data
+rf_ret.fit(train_features, train_labels_ret)
+rf_vol.fit(train_features, train_labels_vol)
 
-for y in Y_list:
-    # Labels are the values we want to predict
-    labels = np.array(all_data_rondom_forest['{}'.format(y)])
-    # Saving feature names for later use
-    train_labels = labels[:-35]
-    test_labels = labels[-35:]
-    # Instantiate model with 100 decision trees
-    rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
-    # Train the model on training data
-    rf.fit(train_features, train_labels)
-    # Use the forest's predict method on the test data
-    predictions = rf.predict(test_features)
-    # Calculate the absolute errors
-    mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
-    #mse for machine learning
-    result_list.append({"{},random_forest,mse_testing".format(y):mse_testing})
+# Use the forest's predict method on the test data
+predictions_ret = rf_ret.predict(test_features)
+predictions_vol = rf_vol.predict(test_features)
+
+# Calculate the absolute errors
+RF_mse_testing_ret = np.square(np.subtract(predictions_ret,test_labels_ret)).mean()
+RF_mse_testing_vol = np.square(np.subtract(predictions_vol,test_labels_vol)).mean()
+print('RF_mse_ret:' + str(RF_mse_testing_ret) + '\nRF_mse_vol:' + str(RF_mse_testing_vol))
+
+
+result = pd.DataFrame({'Date':ml_data[-35:].Date,'realized_ret':test_labels_ret,'predicted_ret':predictions_ret,
+                       'realized_vol':test_labels_vol,'predicted_vol':predictions_vol})
+
+result.to_csv('random_forest_result.csv')
 
 
 """
 SVM (SVR)
 """
-all_data_SVR=all_data_ml_sentiment_Y.dropna()
-                      
-svr_training_x=all_data_SVR.iloc[:-35,3:]
-svr_testing_x=all_data_SVR.iloc[-35:,3:]
-                      
-for y in Y_list:
-    svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
-    svr_training_y=all_data_SVR["{}".format(y)].iloc[:-35]
-    svr.fit(svr_training_x,svr_training_y)
     
-    y_svr = svr.predict(svr_testing_x)
-    svr_testing_y=all_data_SVR["{}".format(y)].iloc[-35:]
-    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
+#kernel= Radial basis function kernel, we can also set it as linear/ploy/others
+svr_ret = SVR(kernel='rbf', epsilon=0.05) 
+svr_vol = SVR(kernel='rbf', epsilon=0.05) 
+
+
+svr_ret.fit(train_features,train_labels_ret)
+svr_vol.fit(train_features,train_labels_vol)
+
+
+SVR_predictions_ret = svr_ret.predict(test_features)
+SVR_predictions_vol = svr_vol.predict(test_features)
+
+SVR_mse_testing_ret = np.square(np.subtract(SVR_predictions_ret,test_labels_ret)).mean()
+SVR_mse_testing_vol = np.square(np.subtract(SVR_predictions_vol,test_labels_vol)).mean()
+                            
+print('SVR_mse_ret:' + str(SVR_mse_testing_ret) + '\nSVR_mse_vol:' + str(SVR_mse_testing_vol))
 
     
 """
 Lasso regression (machine learning)
 """
-all_data_lasso=all_data_ml_sentiment_Y.dropna()
-lasso_training_x=all_data_lasso.iloc[:-35,3:]
-lasso_testing_x=all_data_lasso.iloc[-35:,3:]
-for y in Y_list:
-    clf = linear_model.Lasso(alpha=0.1)
-    lasso_training_y= all_data_lasso["{}".format(y)].iloc[:-35]
-    clf.fit(all_data_lasso,lasso_training_y)
-    y_lasso=clf.predict(lasso_testing_x)
-                      
-    lasso_testing_y= all_data_lasso["{}".format(y)].iloc[-35:]
 
-    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
+
+lasso_ret = linear_model.Lasso(alpha=0.1)
+lasso_vol = linear_model.Lasso(alpha=0.1)
+
+lasso_ret.fit(train_features, train_labels_ret)
+lasso_vol.fit(train_features, train_labels_vol)
+
+lasso_predictions_ret=clf_ret.predict(test_features)
+lasso_predictions_vol=clf_vol.predict(test_features)
+
+lasso_mse_testing_ret = np.square(np.subtract(lasso_predictions_ret,test_labels_ret)).mean()
+lasso_mse_testing_vol = np.square(np.subtract(lasso_predictions_vol,test_labels_vol)).mean()
+                            
+print('lasso_mse_ret:' + str(lasso_mse_testing_ret) + '\nclasso_mse_vol:' + str(lasso_mse_testing_vol))
+
+mse_result = {}
+mse_result = {'RF ret/vol':[RF_mse_testing_ret,RF_mse_testing_vol],
+              'SVR ret/vol':[SVR_mse_testing_ret,SVR_mse_testing_vol],
+              'lasso ret/vol':[lasso_mse_testing_ret,lasso_mse_testing_vol]}
 
 """
 Text directly apply machine learning to predict Y (fong)
