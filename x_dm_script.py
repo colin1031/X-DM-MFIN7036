@@ -499,7 +499,7 @@ SVM (SVR)
 all_data_SVR=all_data.dropna()
 
 for y in Y_list:
-    svr = SVR(kernel='rbf', epsilon=0.05)
+    svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy
     
     svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
     
