@@ -528,7 +528,7 @@ for y in Y_list:
     # Saving feature names for later use
     train_labels = labels[:-35]
     test_labels = labels[-35:]
-    # Instantiate model with 1000 decision trees
+    # Instantiate model with 100 decision trees
     rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
     # Train the model on training data
     rf.fit(train_features, train_labels)
