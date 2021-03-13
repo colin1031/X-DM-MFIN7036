@@ -432,7 +432,7 @@ for y in Y_list:
         next_y = all_data.iloc[-65:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},MSE_testing".format(y,sentiment_score):mse_testing})
+        result_list.append({"{},{},mse_testing".format(y,sentiment_score):mse_testing})
 
 #in return, 'daily_return,nltk_score_lag_1d,MSE_testing' lowest
 #in volatility,  'volatility_30_days,nltk_score_lag_1d,MSE_testing' lowest
@@ -443,7 +443,7 @@ for y in Y_list:
         next_y = all_data.iloc[-65:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(numOfComments_lag_1d)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},MSE_testing".format(y,numOfComments_lag_1d):mse_testing})
+        result_list.append({"{},{},mse_testing".format(y,numOfComments_lag_1d):mse_testing})
 
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
@@ -452,7 +452,7 @@ for y in Y_list:
         next_y = all_data.iloc[-65:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-65:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},'numOfComments_lag_1d'".format(y,sentiment_score):mse_testing})
+        result_list.append({"{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
 
 # control for number of mentions, testing mse work  better than single (return) "daily_return,textblob_score_lag_1d,'numOfComments_lag_1d'": 0.007284506071957778
 # volatility_30_days does hv improvement  {'volatility_30_days,nltk_score_lag_1d,MSE_testing': 0.011329415500966729},
@@ -490,7 +490,7 @@ for y in Y_list:
     # Calculate the absolute errors
     mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
     #mse for machine learning
-    result_list.append({"{},random_forest".format(y):mse_testing})
+    result_list.append({"{},random_forest,mse_testing".format(y):mse_testing})
 
 
 """
@@ -504,7 +504,7 @@ for y in Y_list:
     svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
     
     y_svr = svr.predict(all_data_SVR.iloc[-65:,3:])
-    result_list.append({"{},SVR".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-65:],y_svr)).mean()})
+    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-65:],y_svr)).mean()})
 
     
 """
@@ -516,7 +516,7 @@ for y in Y_list:
     clf.fit(all_data_lasso.iloc[:-65,3:], all_data_lasso["{}".format(y)].iloc[:-65])
     y_lasso=clf.predict(all_data_lasso.iloc[-65:,3:])
     
-    result_list.append({"{},lasso".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-65:],y_lasso)).mean()})
+    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-65:],y_lasso)).mean()})
 
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
