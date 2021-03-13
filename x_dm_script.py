@@ -427,7 +427,8 @@ for y in Y_list:
 """
 Prediction with regression (sentiment to Y)
 """
-#Can we this regression to predict tmr return (4 day for testing)
+#Can we this regression to predict future return and future 30 days volatility (testing set)
+#We use testing mse to compare the prediction model performance
 result_list=[]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
