@@ -566,6 +566,19 @@ for y in Y_list:
     result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-35:],y_lasso)).mean()})
 
 """
+Text directly apply machine learning to predict Y (fong)
+"""
+"""
+text 轉 vector #模型tfidf lsa等 should be 2 model
+"""
+
+                      
+"""
+machine learning apply
+"""
+                      
+                      
+"""
 After we find out the best prediction model (from sentiment to return/30 days volatility)
 """
 #fit the model with whole data set
