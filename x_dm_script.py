@@ -230,6 +230,7 @@ def stemming(filtered_sentence):
         
 def gen_worddict(temp_df):
     temp_str = ''
+    emp_df = temp_df.drop(temp_df[temp_df['language']!="en"].index)
     for string in temp_df.tweet:
         temp_str = temp_str + '' + string
         
@@ -285,7 +286,9 @@ def get_matrix(day_x,data_1):
         elif key.upper() in uncertainty:
             uncer += worddict[key]
             #print(key," is uncertainty")
-            
+    
+    numOfUsefulWords = neg + post + uncer
+    
     numOfWords = 0
     for word in worddict:
         numOfWords += worddict[word]
@@ -293,6 +296,10 @@ def get_matrix(day_x,data_1):
     # martix 1
     numOfSentense = len(temp_df)       # the number of sentense
     news_sentiment = (post-neg)/numOfSentense
+    print("Number of words: " + str(numOfWords))
+    print("Number of useful words: " + str(numOfUsefulWords))
+    print("Number of sentense: " + str(numOfSentense) ) 
+    print("News sentiment: " + str(news_sentiment))
     
     complex_word = list()
     numOfComplex = 0
