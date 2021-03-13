@@ -437,19 +437,10 @@ Financial dataset related (scrape, clean process, calculate daily return stuff
 
 
 """
-merge financial data and sentiment variable and number of counts
+Read merged data (financial data and sentiment data)
 """
-# read ripple financial data   
-financial_data_path='/Users/colinko/Documents/Colin/HKU/7036/X-dm/financial_data'
-xrp_data = pd.read_pickle(financial_data_path+os.sep+'Cleaned Ripple Financial Data.pickle').reset_index()
-
-#this data included number of counts already
-sentiment_data=pd.read_csv(cleaning_data_path+os.sep+'sentiment_variable_data.csv',parse_dates=['date']) # semmes already hv number of counts
-sentiment_data.rename(columns={'date':'Date'},inplace=True)
-
-
-all_data = pd.merge(xrp_data, sentiment_data,
-                    on='Date')
+#read 
+all_data = pd.read_csv('./merge_data.csv')
 
 all_data.columns
 all_data['textblob_score_lag_1d'] = all_data['polarty_score_with_textblob'].shift(1)
