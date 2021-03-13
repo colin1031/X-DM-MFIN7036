@@ -458,7 +458,7 @@ for y in Y_list:
 # volatility_30_days does hv improvement  {'volatility_30_days,nltk_score_lag_1d,MSE_testing': 0.011329415500966729},
 
 """""
-Machine learning (Sentiment to Y)
+Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
 """""
 
 """
