@@ -385,6 +385,7 @@ kk.set_index(['Date'], inplace=True)
 """
 Financial dataset related (calculate 30 days volatility, etc.)
 """
+
 # merge financial data
 ripple = pd.read_csv('XRP_USD Historical Data.csv')
 
