@@ -479,9 +479,9 @@ Prediction with regression (sentiment to Y)
 result_list=[]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
-        a=smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
-        next_y = all_data.iloc[-65:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]
+        a=smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-35:]['{}'.format(y)]
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},mse_testing".format(y,sentiment_score):mse_testing})
 
@@ -490,18 +490,18 @@ for y in Y_list:
 
 #predict with only mentions count
 for y in Y_list:
-        a=smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-65]).fit().summary2().tables[1]
-        next_y = all_data.iloc[-65:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['numOfComments_lag_1d']
+        a=smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-35]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-35:]['{}'.format(y)]
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['numOfComments_lag_1d']
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},numOfComments_lag_1d,mse_testing".format(y):mse_testing})
 
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
-        a=smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-65]).fit().summary2().tables[1]
-        next_y = all_data.iloc[-65:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-65:]["numOfComments_lag_1d"]
+        a=smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
+        next_y = all_data.iloc[-35:]['{}'.format(y)]
+        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-35:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
 
@@ -520,15 +520,15 @@ all_data_rondom_forest=all_data_rondom_forest.dropna()
 features= all_data_rondom_forest.iloc[:,3:]
 features.columns
 features = np.array(features)
-train_features = features[:-65]
-test_features = features[-65:]
+train_features = features[:-35]
+test_features = features[-35:]
 
 for y in Y_list:
     # Labels are the values we want to predict
     labels = np.array(all_data_rondom_forest['{}'.format(y)])
     # Saving feature names for later use
-    train_labels = labels[:-65]
-    test_labels = labels[-65:]
+    train_labels = labels[:-35]
+    test_labels = labels[-35:]
     # Instantiate model with 1000 decision trees
     rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
     # Train the model on training data
@@ -549,10 +549,10 @@ all_data_SVR=all_data.dropna()
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
     
-    svr.fit(all_data_SVR.iloc[:-65,3:], all_data_SVR["{}".format(y)].iloc[:-65])
+    svr.fit(all_data_SVR.iloc[:-35,3:], all_data_SVR["{}".format(y)].iloc[:-35])
     
-    y_svr = svr.predict(all_data_SVR.iloc[-65:,3:])
-    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-65:],y_svr)).mean()})
+    y_svr = svr.predict(all_data_SVR.iloc[-35:,3:])
+    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(all_data_SVR["{}".format(y)].iloc[-35:],y_svr)).mean()})
 
     
 """
@@ -561,10 +561,10 @@ Lasso regression (machine learning)
 all_data_lasso=all_data.dropna()
 for y in Y_list:
     clf = linear_model.Lasso(alpha=0.1)
-    clf.fit(all_data_lasso.iloc[:-65,3:], all_data_lasso["{}".format(y)].iloc[:-65])
-    y_lasso=clf.predict(all_data_lasso.iloc[-65:,3:])
+    clf.fit(all_data_lasso.iloc[:-35,3:], all_data_lasso["{}".format(y)].iloc[:-35])
+    y_lasso=clf.predict(all_data_lasso.iloc[-35:,3:])
     
-    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-65:],y_lasso)).mean()})
+    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(all_data_lasso["{}".format(y)].iloc[-35:],y_lasso)).mean()})
 
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
