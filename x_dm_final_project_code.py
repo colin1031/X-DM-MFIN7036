@@ -383,7 +383,7 @@ kk.set_index(['Date'], inplace=True)
 
 
 """
-Financial dataset related (calculate 30 days volatility, etc.)
+financial dataset related (calculate 30 days volatility, etc.)
 """
 
 # merge financial data
