@@ -589,6 +589,8 @@ machine learning apply
 """
 compare which model is the best in predict return / 30 days volatility
 """
+#sentiment to Y (testing MSE)
+result_list
                       
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
