@@ -577,6 +577,9 @@ text 轉 vector #模型tfidf lsa等 should be 2 model
 machine learning apply
 """
                       
+"""
+compare which model is the best in predict return / 30 days volatility
+"""
                       
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
