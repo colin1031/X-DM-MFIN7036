@@ -5,7 +5,8 @@ Created on Sat Feb 20 18:12:06 2021
 @author: colin
 """
 """
-To download the raw data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
+To download the data, please go to:
+https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 """
 
 """
