@@ -454,12 +454,11 @@ all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
 all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
 all_data['Fog_index_lag_1d']=all_data['Fog_index'].shift(1)
 
-
 """
 different regression
 """
 Y_list=['daily_return','volatility_30_days']
-sentiment_score_list=["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d, Fog index_lag_1d"]
+sentiment_score_list=["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d","Fog_index_lag_1d"]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         print(smf.ols('{} ~ {}'.format(y,sentiment_score), all_data).fit().summary())
@@ -487,9 +486,6 @@ for y in Y_list:
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},mse_testing".format(y,sentiment_score):mse_testing})
 
-#in return, 'daily_return,nltk_score_lag_1d,MSE_testing' lowest
-#in volatility,  'volatility_30_days,nltk_score_lag_1d,MSE_testing' lowest
-
 #predict with only mentions count
 for y in Y_list:
         a=smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-35]).fit().summary2().tables[1]
@@ -510,12 +506,13 @@ for y in Y_list:
 """""
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
 """""
-
+# drop for further setting features use
+all_data_ml_sentiment_Y=all_data.drop(['day','Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
 """
 random forest
 """
-# drop for further setting features use
-all_data_rondom_forest=all_data.drop(['day','Fog index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+
+all_data_rondom_forest=all_data_ml_sentiment_Y
 all_data_rondom_forest.columns
 # Convert to numpy array
 all_data_rondom_forest=all_data_rondom_forest.dropna()
@@ -546,7 +543,7 @@ for y in Y_list:
 """
 SVM (SVR)
 """
-all_data_SVR=all_data.dropna()
+all_data_SVR=all_data_ml_sentiment_Y.dropna()
 
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
@@ -560,7 +557,7 @@ for y in Y_list:
 """
 Lasso regression (machine learning)
 """
-all_data_lasso=all_data.dropna()
+all_data_lasso=all_data_ml_sentiment_Y.dropna()
 for y in Y_list:
     clf = linear_model.Lasso(alpha=0.1)
     clf.fit(all_data_lasso.iloc[:-35,3:], all_data_lasso["{}".format(y)].iloc[:-35])
