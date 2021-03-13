@@ -266,8 +266,11 @@ uncertainty = to_list(Uncertainty)
 
 # get sentiment vairables
 def get_matrix(day_x,data_1):
+    adjust_day(data_1)
     print('days',day_x, ' are aready adjusted!')
+    print(data_1['day_adjust'])
     temp_df = data_1[data_1['day_adjust'] == day_x]
+    print(temp_df)
     worddict = gen_worddict(temp_df)
     
     print('  -  worddict is aready done!')
@@ -276,29 +279,36 @@ def get_matrix(day_x,data_1):
     post = 0      # number of positive words
     neg = 0      # number of negative words
     uncer = 0    # number of uncertainty words
+    strDay = str()
     for key in worddict:                 # calculate the number of words
         if key.upper() in negative:
             neg += worddict[key]
+            
+            strDay = strDay +  " " + key
             #print(key," is negative")
         elif key.upper() in positive:
             post += worddict[key]
+            strDay = strDay +  " " + key
             #print(key," is positive")
         elif key.upper() in uncertainty:
             uncer += worddict[key]
+            strDay = strDay +  " " + key
             #print(key," is uncertainty")
+        #else:
+            #print("sorry,this word is not work!——",key)
     
-    numOfUsefulWords = neg + post + uncer
-    
+    numOfUsefulWords = neg + post + uncer 
+       
     numOfWords = 0
     for word in worddict:
         numOfWords += worddict[word]
-        
-    # martix 1
-    numOfSentense = len(temp_df)       # the number of sentense
-    news_sentiment = (post-neg)/numOfSentense
+   
+    numOfComments = len(temp_df) 
+    
+    news_sentiment = (post-neg)/numOfComments   
     print("Number of words: " + str(numOfWords))
     print("Number of useful words: " + str(numOfUsefulWords))
-    print("Number of sentense: " + str(numOfSentense) ) 
+    print("Number of sentense: " + str(numOfComments) ) 
     print("News sentiment: " + str(news_sentiment))
     
     complex_word = list()
@@ -309,37 +319,84 @@ def get_matrix(day_x,data_1):
             numOfComplex += worddict[word]
             #print(word,worddict[word])
 
-    Fog = 0.4*(numOfWords/numOfSentense+100*numOfComplex/numOfWords)   #Fog index
+    Fog = 0.4*(numOfWords/numOfComments+100*numOfComplex/numOfWords)   #Fog index
     print("  -  Fog index is ",Fog)
     
+
     polarty_score_with_textblob = 0
     polarty_score_with_nltk = 0
 
     for sentence in temp_df['tweet']:
         #using textblob
         s = TextBlob(sentence).sentiment #assign sentiment score of that sentence
-        polarty_score_with_textblob += s.polarity / numOfSentense
-    
+        polarty_score_with_textblob += s.polarity / numOfComments
+        print('Days: '+ str(day_x))
+        print('Polarty score with textblob: '+ str(polarty_score_with_textblob))
         #using nltk
         sid = SentimentIntensityAnalyzer()
-        polarty_score_with_nltk += sid.polarity_scores(sentence)['compound'] / numOfSentense      #assign sentiment score of that sentence #only extract the compound score
-    
-    return worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog, polarty_score_with_textblob, polarty_score_with_nltk
+        polarty_score_with_nltk += sid.polarity_scores(sentence)['compound'] / numOfComments      #assign sentiment score of that sentence #only extract the compound score
+        
+        print('Polarty score with nltk: '+ str(polarty_score_with_nltk))
+
+
+    return worddict, post,neg,uncer, numOfWords, numOfUsefulWords, numOfComments, news_sentiment, strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk
+
+start_date = '2020-03-01'
+end_date = '2021-03-04'
 
 week_list = list(range(-1,364,7))
 
 # process weekly data
 list_1 = list()
+listTotal = list()
 for week in week_list:
-    td = pd.read_csv(file_dir.format(int((week+8)/7)))
+    td = pd.read_pickle(file_dir.format(int((week+8)/7)))
     day_list = list(range(week,week+7))
+    print(range(week,week+7))
     for day_x in day_list:
-        worddict,post,neg,uncer, numOfWords,numOfSentense,news_sentiment,Fog = get_matrix(day_x,td)
-        list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfWords':numOfWords,'numOfComments':numOfSentense, 'News_sentiment': news_sentiment,'Fog index':Fog })
+        worddict,post,neg,uncer, numOfWords,numOfUsefulWords,numOfComments,news_sentiment,strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk = get_matrix(day_x,td)
+        listTotal.append(strDay)
+        
+        list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfUsefulWords': numOfUsefulWords,'numOfWords':numOfWords,'numOfComments':numOfComments, 'News_sentiment': news_sentiment,'Fog_index':Fog, 'polarty_score_with_textblob':polarty_score_with_textblob, 'polarty_score_with_nltk': polarty_score_with_nltk}
+
+# tfidf and LSA
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(listTotal) 
+terms = vectorizer.get_feature_names()
+print(terms)
+
+n_pick_topics = 1362          # 设定主题数为1362，也就是将维度降到了1362
+lsa = TruncatedSVD(n_pick_topics)
+X2 = lsa.fit_transform(X)
+print(X2)  
+ll = pd.DataFrame(X2)
+ll.to_csv('./lsa_data.csv')  
+                                           
+# add back date information                     
+dates = pd.date_range(start_date,end_date).strftime("%Y-%m-%d").to_list()
 
 kk = pd.DataFrame(list_1)
-kk.to_pickle('final_data_year.pickle')
+kk.drop(kk.columns[0], axis = 1, inplace = True)
+kk['Date'] = dates
+kk.set_index(['Date'], inplace=True)
 
+# merge financial data
+ripple = pd.read_csv('XRP_USD Historical Data.csv')
+
+daily_return = pd.DataFrame(ripple[['Date','Change %']])
+
+daily_return.rename(columns={'Change %':'daily_return'}, inplace=True)
+
+daily_return['volatility_30_days'] = np.nan
+# volatility for every 30 days windows
+for day in range(30, len(daily_return)):
+    daily_return['volatility_30_days'].iloc[day] = np.std(daily_return.daily_return.iloc[day-30:day])
+daily_return = daily_return.dropna()
+
+result = pd.merge(kk, daily_return, on=['Date'])
+
+result.to_csv('./final_data.csv')  
+                      
 # Visualization of Sentiment Scores
 
 import matplotlib.pyplot as plt
