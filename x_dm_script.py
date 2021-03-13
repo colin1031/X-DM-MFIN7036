@@ -410,14 +410,10 @@ sentiment_score_list=["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_scor
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         print(smf.ols('{} ~ {}'.format(y,sentiment_score), all_data).fit().summary())
-        
-#siginifiance in volatility, but not return
-        
+                
 #only number of counts?
 for y in Y_list:
     print(smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data).fit().summary())
-
-#siginifiance in volatility, but not return
 
 #also control number of counts?
 for y in Y_list:
@@ -457,9 +453,6 @@ for y in Y_list:
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-65:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-65:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
-
-# control for number of mentions, testing mse work  better than single (return) "daily_return,textblob_score_lag_1d,'numOfComments_lag_1d'": 0.007284506071957778
-# volatility_30_days does hv improvement  {'volatility_30_days,nltk_score_lag_1d,MSE_testing': 0.011329415500966729},
 
 """""
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
