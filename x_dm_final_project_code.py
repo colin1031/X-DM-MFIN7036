@@ -403,7 +403,7 @@ daily_return = daily_return.dropna()
 merge financial data and sentiment data
 """
 result = pd.merge(kk, daily_return, on=['Date'])
-
+result.set_index(['Date'], inplace=True)
 result.to_csv('./final_data.csv')  
                       
 # Visualization of Sentiment Scores
