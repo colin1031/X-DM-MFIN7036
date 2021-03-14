@@ -741,8 +741,6 @@ use the full dataset to produce final model and plot
 """
 #In daily return
 whole_features = features[:]
-y=Y_list[0]
-labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
 whole_labels = labels[:]
 rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
 rf.fit(whole_features, whole_labels)
@@ -766,35 +764,20 @@ plt.legend()
 plt.show()
 
 #In volatility_30_days
-lsa_features = lsa_ml_data.iloc[:,3:].shift(1) 
-lsa_features = np.array(lsa_features)
-lsa_labels_vol = np.array(lsa_ml_data['volatility_30_days'])
-lsa_train_features = lsa_features[1:-35]
-lsa_train_labels_vol = lsa_labels_vol[1:-35]
-lsa_test_features = lsa_features[-35:]
-lsa_test_labels_vol = lsa_albels_vol[-35:]
-lsa_rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
-lsa_rf_vol.fit(lsa_train_features, lsa_train_labels_vol)
-lsa_rf_predictions_vol = rf_vol.predict(lsa_test_features)
-
-
-finnal_features = ml_data.iloc[:,3:].shift(1) 
-final_features = np.array(final_features)
-final_labels_vol = np.array(ml_data['volatility_30_days']) 
-whole_features = final_features[1:]
-whole_labels_vol = final_labels_vol[1:]
+whole_lsa_rf_features = lsa_features[1:]
+whole_lsa_rf_labels_vol = lsa_labels_vol[1:]
 
 rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
-rf_vol.fit(whole_features, whole_labels_vol)
-predictions_vol = rf_vol.predict(whole_features)
+rf_vol.fit(whole_lsa_rf_features, whole_lsa_rf_labels_vol)
+lsa_rf_whole_predictions_vol = rf_vol.predict(whole_lsa_ml_features)
 
 
-predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(lsa_rf_whole_predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
 predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.drop(columns='index')
 predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
 predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.set_index("Date")
 
-whole_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(whole_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+whole_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(whole_lsa_rf_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
 whole_labels_RF_text_to_y_df=whole_labels_RF_text_to_y_df.drop(columns='index')
 whole_labels_RF_text_to_y_df['Date']=pd.to_datetime(whole_labels_RF_text_to_y_df['Date'])
 whole_labels_RF_text_to_y_df=whole_labels_RF_text_to_y_df.set_index("Date")
