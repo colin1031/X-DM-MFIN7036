@@ -668,7 +668,8 @@ compare which model is the best in predict return / 30 days volatility
 dict_all_mse_sentiment_y={}
 for dict_mse in result_list:
     dict_all_mse_sentiment_y.update(dict_mse)
-series_all_mse_sentiment_y=pd.Series(dict_all_mse_sentiment_y)
+series_all_mse_sentiment_y=pd.Series(dict_all_mse_sentiment_y).sort_values(axis='index')
+print(series_all_mse_sentiment_y)
     
 #text to Y
 mse_result_texttoY_series=pd.Series(mse_result_texttoY)
