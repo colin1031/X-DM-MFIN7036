@@ -174,6 +174,7 @@ Sentiment Vairable (Sun Yi) Counting mentions variable  (numOfSentence)
 """
 try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
 
+# need to create a new folder in the current path named "weekly"
 # split data into different weeks
 file_dir = './weekly/week_{}_data.pickle'
 for i in range(-1,364,7):
