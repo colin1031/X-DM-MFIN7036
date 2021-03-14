@@ -717,6 +717,38 @@ plt.plot(test_labels_df, label = "RF_actual_y_testing_set")
 plt.legend()
 plt.show()
 
+                                      
+#In predicting volatility_30_days
+print(testing_mse_volatility_30_days_compare.head(1))
+#plot testing actual y and predict y
+features = ml_data.iloc[:,3:].shift(1) 
+features = np.array(features)
+labels_vol = np.array(ml_data['volatility_30_days']) #'volatility_30_days'
+train_features = features[1:-35]
+train_labels_vol = labels_vol[1:-35]
+test_features = features[-35:]
+test_labels_vol = labels_vol[-35:]
+rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
+rf_vol.fit(train_features, train_labels_vol)
+predictions_vol = rf_vol.predict(test_features)
+
+
+predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.drop(columns='index')
+predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
+predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.set_index("Date")
+
+test_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(test_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.drop(columns='index')
+test_labels_RF_text_to_y_df['Date']=pd.to_datetime(test_labels_RF_text_to_y_df['Date'])
+test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.set_index("Date")
+
+plt.rcParams["figure.figsize"] = (10.5, 6)
+plt.title('volatility_30_days_best_prediction_testing_result')
+plt.plot(predictions_RF_text_to_y_df, label = "RF_predict_y_testing_set")
+plt.plot(test_labels_RF_text_to_y_df, label = "RF_actual_y_testing_set")
+plt.legend()
+plt.show()
 
                        
 """
