@@ -446,13 +446,12 @@ all_data['textblob_score_lag_1d'] = all_data['polarty_score_with_textblob'].shif
 all_data['nltk_score_lag_1d'] = all_data['polarty_score_with_nltk'].shift(1)
 all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
 all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
-all_data['Fog_index_lag_1d']=all_data['Fog_index'].shift(1)
 
 """
 different regression
 """
 Y_list = ['daily_return','volatility_30_days']
-sentiment_score_list = ["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d","Fog_index_lag_1d"]
+sentiment_score_list = ["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d"]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         print(smf.ols('{} ~ {}'.format(y,sentiment_score), all_data).fit().summary())
