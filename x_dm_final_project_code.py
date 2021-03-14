@@ -442,7 +442,7 @@ plt.show()
 Read merged data (financial data and sentiment data)
 """
 #read 
-all_data = pd.read_csv('./merge_data.csv')
+all_data = pd.read_csv('./final_data.csv')
 
 all_data.columns
 all_data['textblob_score_lag_1d'] = all_data['polarty_score_with_textblob'].shift(1)
@@ -504,7 +504,7 @@ for y in Y_list:
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
 """""
 # drop for further setting features use
-all_data_ml_sentiment_Y=all_data.drop(['day','Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
 """
 random forest
 """
