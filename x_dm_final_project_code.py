@@ -669,7 +669,6 @@ lasso_mse_testing_vol = np.square(np.subtract(lasso_predictions_vol,test_labels_
                             
 print('lasso_mse_ret:' + str(lasso_mse_testing_ret) + '\nclasso_mse_vol:' + str(lasso_mse_testing_vol))
 
-mse_result_texttoY = {}
 mse_result_texttoY = {'RF ret/vol':[RF_mse_testing_ret,RF_mse_testing_vol],
               'SVR ret/vol':[SVR_mse_testing_ret,SVR_mse_testing_vol],
               'lasso ret/vol':[lasso_mse_testing_ret,lasso_mse_testing_vol]}
