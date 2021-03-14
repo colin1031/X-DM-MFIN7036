@@ -674,10 +674,24 @@ mse_result_texttoY_df=mse_result_texttoY_df.rename(columns={0: "daily_return", 1
                        
 #easy for compare
 testing_mse_daily_return_compare=pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y],join='inner')
-testing_mse_volatility_30_days_compare=pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y],join='inner')
+testing_mse_daily_return_compare=testing_mse_daily_return_compare.sort_values(by='daily_return')
+
+testing_mse_volatility_30_days_compare=pd.concat([mse_result_texttoY_df,df_vol_all_mse_sentiment_y],join='inner')
+testing_mse_volatility_30_days_compare=testing_mse_volatility_30_days_compare.sort_values(by='volatility_30_days')
 
 print(testing_mse_daily_return_compare)
 print(testing_mse_volatility_30_days_compare)
+
+#best model(by smallest testing mse)
+#In predicting daily return
+print(testing_mse_daily_return_compare.head(1))
+#plot testing actual y and predict y
+                      
+#In predicting volatility_30_days
+print(testing_mse_volatility_30_days_compare.head(1))
+#plot testing actual y and predict y
+
+
                        
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
