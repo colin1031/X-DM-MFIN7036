@@ -552,7 +552,7 @@ X = vectorizer.fit_transform(listTotal)
 terms = vectorizer.get_feature_names()
 print(terms)
 
-n_pick_topics = 1362          # 设定主题数为1362，也就是将维度降到了1362
+n_pick_topics = 1362          # reduce dimensions to 1362
 lsa = TruncatedSVD(n_pick_topics)
 X2 = lsa.fit_transform(X)
 print(X2)  
