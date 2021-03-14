@@ -57,17 +57,9 @@ os.chdir(path)
 os.getcwd()
 
 """
-Setting all the path
-"""
-
-#specific file to save those data
-path_raw_data = r''
-cleaning_data_path = r''
-
-"""
 Mining tweets through Twint (Specific time range) 
 """
-os.chdir(path_raw_data) #twint will save data to current directory, so we need to set directory
+#twint will save data to current directory
 
 #configuration
 config = twint.Config()
@@ -119,7 +111,7 @@ print("--- %s seconds ---" % (time.time() - start_time_count))
 """
 Read raw data (tweets through Twint with specific time range) & concate those files into one large datafile
 """
-all_files = glob.glob(path_raw_data + "/*.csv")
+all_files = glob.glob(path + "/*.csv")
 
 li = []
 
