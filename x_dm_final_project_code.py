@@ -505,6 +505,8 @@ Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial d
 """""
 # drop for further setting features use
 all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+label_all_data_ml_sentiment_Y=pd.concat([all_data_ml_sentiment_Y.pop(x) for x in ['daily_return', 'volatility_30_days']],axis=1)
+
 """
 random forest
 """
