@@ -415,7 +415,7 @@ plt.plot(x, y_1, color = 'springgreen', mec = 'r', mfc = 'w', linestyle = '-',lw
 plt.plot(x, y_2, color = 'orangered', mec = 'b', mfc = 'w',linestyle = '-',lw = 1  , ms = 3, label = 'Polarty Score With nltks')
 plt.plot(x, y_3, color = 'royalblue', mec ='g', mfc ='w', linestyle = '-', lw = 1  , ms = 3, label = 'Polarty Score With textblob')
 plt.plot(x, y_4, color = 'gold', mec = 'y', mfc = 'w', linestyle = '-', lw = 1.5  , ms = 4, label = 'Real Daily Return')
-plt.plot(x, y_5, color = 'violet', mec = 'y', mfc = 'w', linestyle = '-', lw = 1.5  , ms = 4, label = 'Real Daily Return')
+plt.plot(x, y_5, color = 'violet', mec = 'y', mfc = 'w', linestyle = '-', lw = 1.5  , ms = 4, label = '30-day Volatility')
 
 
 plt.legend() 
