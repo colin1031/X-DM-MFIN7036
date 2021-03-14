@@ -417,9 +417,9 @@ y_3 = data['polarty_score_with_textblob']
 y_4 = data['daily_return']
  
 plt.plot(x, y_1, color = 'red', marker = 'D', mec='r', mfc='w', linestyle = '-',lw=1  , ms=3, label = 'News Sentiment Score')
-plt.plot(x, y_2, color = 'blue', marker = '*', mec='b', mfc='w',linestyle = '-',lw=1  , ms=3, label = 'Polarty Score With nltks')
+plt.plot(x, y_2, color = 'blue', marker = 's', mec='b', mfc='w',linestyle = '-',lw=1  , ms=3, label = 'Polarty Score With nltks')
 plt.plot(x, y_3, color = 'green', marker = 'o', mec='g', mfc='w', linestyle = '-', lw=1  , ms=3, label = 'Polarty Score With textblob')
-plt.plot(x, y_4, color = 'yellow', marker = 'o', mec='y', mfc='w', linestyle = '-', lw=2  , ms=4, label = 'Real Daily Return')
+plt.plot(x, y_4, color = 'yellow', marker = '*', mec='y', mfc='w', linestyle = '-', lw=2  , ms=4, label = 'Real Daily Return')
 
 
 plt.legend() 
