@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Feb 20 18:12:06 2021
 
-@author: colin
 """
-"""
-To download the data, please go to:
+To download all the data, please go to:
 https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 """
 
 """
-If having trouble when using twint:
+If encounter trouble when using twint:
 pip uninstall twint -y
 pip install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
 
