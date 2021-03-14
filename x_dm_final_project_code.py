@@ -585,17 +585,17 @@ lsa_features = np.array(lsa_features)
 
 # Labels are the values we want to predict
 lsa_labels_ret = np.array(lsa_ml_data['daily_return']) #'daily_return'
-lsa_albels_vol = np.array(lsa_ml_data['volatility_30_days']) #'volatility_30_days'
+lsa_labels_vol = np.array(lsa_ml_data['volatility_30_days']) #'volatility_30_days'
 
 
 #split last 35 days for test sample
 lsa_train_features = lsa_features[1:-35]
 lsa_train_labels_ret = lsa_labels_ret[1:-35]
-lsa_train_labels_vol = lsa_albels_vol[1:-35]
+lsa_train_labels_vol = lsa_labels_vol[1:-35]
 
 lsa_test_features = lsa_features[-35:]
 lsa_test_labels_ret = lsa_labels_ret[-35:]
-lsa_test_labels_vol = lsa_albels_vol[-35:]
+lsa_test_labels_vol = lsa_labels_vol[-35:]
       
 """
 random forest
@@ -716,24 +716,12 @@ plt.show()
 #In predicting volatility_30_days
 print(testing_mse_volatility_30_days_compare.head(1))
 #plot testing actual y and predict y
-features = ml_data.iloc[:,3:].shift(1) 
-features = np.array(features)
-labels_vol = np.array(ml_data['volatility_30_days']) #'volatility_30_days'
-train_features = features[1:-35]
-train_labels_vol = labels_vol[1:-35]
-test_features = features[-35:]
-test_labels_vol = labels_vol[-35:]
-rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
-rf_vol.fit(train_features, train_labels_vol)
-predictions_vol = rf_vol.predict(test_features)
-
-
-predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(lsa_rf_predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
 predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.drop(columns='index')
 predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
 predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.set_index("Date")
 
-test_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(test_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+test_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(lsa_test_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
 test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.drop(columns='index')
 test_labels_RF_text_to_y_df['Date']=pd.to_datetime(test_labels_RF_text_to_y_df['Date'])
 test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.set_index("Date")
@@ -778,6 +766,18 @@ plt.legend()
 plt.show()
 
 #In volatility_30_days
+lsa_features = lsa_ml_data.iloc[:,3:].shift(1) 
+lsa_features = np.array(lsa_features)
+lsa_labels_vol = np.array(lsa_ml_data['volatility_30_days'])
+lsa_train_features = lsa_features[1:-35]
+lsa_train_labels_vol = lsa_labels_vol[1:-35]
+lsa_test_features = lsa_features[-35:]
+lsa_test_labels_vol = lsa_albels_vol[-35:]
+lsa_rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
+lsa_rf_vol.fit(lsa_train_features, lsa_train_labels_vol)
+lsa_rf_predictions_vol = rf_vol.predict(lsa_test_features)
+
+
 finnal_features = ml_data.iloc[:,3:].shift(1) 
 final_features = np.array(final_features)
 final_labels_vol = np.array(ml_data['volatility_30_days']) 
