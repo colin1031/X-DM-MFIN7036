@@ -557,10 +557,10 @@ for y in Y_list:
     result_list.append({"sentiment_Y,{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
                        
 """
-Text directly apply machine learning to predict Y (fong)
+Text directly apply machine learning to predict
 """
 """
-text 轉 vector #模型tfidf lsa等 should be 2 model
+text 轉 vector #模型tfidf lsa等
 """
 """
 DateFrame prepare for (text to machine learning)
@@ -573,9 +573,9 @@ ml_data = pd.merge(xrp_data, lsa_data, on='index').drop(columns='index')
 """
 machine learning apply
 """
-'''
+"""
 prepare ml training and testing data
-'''                    
+"""                    
 # Saving feature names for later use
 #all sample start from 2020-03-02
 lsa_features = lsa_ml_data.iloc[:,3:].shift(1) 
@@ -687,11 +687,6 @@ print(testing_mse_volatility_30_days_compare)
 #In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
 #plot testing actual y and predict y
-features= all_data_ml_sentiment_Y.iloc[:,1:]
-features.columns
-features = np.array(features)
-train_features = features[:-35]
-test_features = features[-35:]
 y=Y_list[0]
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
 train_labels = labels[:-35]
@@ -757,9 +752,6 @@ After we find out the best model (from sentiment to return/30 days volatility)
 use the full dataset to produce final model and plot
 """
 #In daily return
-features= all_data_ml_sentiment_Y.iloc[:,1:]
-features.columns
-features = np.array(features)
 whole_features = features[:]
 y=Y_list[0]
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
