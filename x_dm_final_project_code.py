@@ -493,7 +493,7 @@ for y in Y_list:
         result_list.append({"sentiment_Y,{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
 
 """""
-Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
+Machine learning (Sentiment to Y)
 """""
 # drop for further setting features use
 all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1).dropna()
