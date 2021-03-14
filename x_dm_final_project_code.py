@@ -10,12 +10,9 @@ https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sha
 """
 
 """
-if need:
-pip install tweepy
+If having trouble when using twint:
 pip uninstall twint -y
 pip install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-pip install asyncio
-pip install nest_asyncio
 
 """
 
