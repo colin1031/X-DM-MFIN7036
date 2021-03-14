@@ -45,6 +45,8 @@ from sklearn.datasets import make_regression
 from sklearn.svm import SVR
 from sklearn.model_selection import learning_curve
 from sklearn import linear_model
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 """
@@ -397,8 +399,7 @@ result.to_csv('./final_data.csv')
                       
 # Visualization of Sentiment Scores
 
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+
 
 fig, ax = plt.subplots(1, 1)
 
