@@ -59,9 +59,9 @@ os.getcwd()
 """
 Mining tweets through Twint (Specific time range) 
 """
-#twint will save data to current directory
-
-#configuration
+# twint will save data to current directory
+# do not recommend you to scrape data again because it is really time consuming
+# configuration
 config = twint.Config()
 config.Search = ['Xrp' or "Ripple"] #if tweet include xrp or ripple (Capital letter or not doesn't matter)
 config.Lang = "en"
@@ -83,11 +83,11 @@ for i in range(timeperiod):
         config.Since = since
         config.Until = until
 
-        #If we want to store in json
-        # config.Store_json = True
-        # config.Output = "custom_out.json"
+        # If we want to store in json
+        #config.Store_json = True
+        #config.Output = "custom_out.json"
 
-        #If we want to store in csv
+        # If we want to store in csv
         config.Store_csv = True
         config.Output = "raw_xrp_or_ripple_twint_{}.csv".format(since)
 
@@ -95,11 +95,11 @@ for i in range(timeperiod):
         loop = asyncio.get_event_loop()
         loop.is_running()
 
-        #If True, run this command
+        # If True, run this command
         if loop.is_running() == True:
             nest_asyncio.apply()
 
-        #running search
+        # running search
         twint.run.Search(config)
     
     except:
@@ -128,10 +128,10 @@ Raw Data Cleaning and preprocessing
 """
 raw_data_tweets = pd.read_pickle('./raw_data_tweets.pickle')
 
-#check duplicates and drop duplicates
+# check duplicates and drop duplicates
 raw_data_tweets.drop_duplicates(inplace = True)
 
-#fix time in order to match the finacial data timezone
+# fix time in order to match the finacial data timezone
 def switch_tz(time, t = 8):
     return datetime.datetime.strptime(time[:19], '%Y-%m-%d %H:%M:%S') - datetime.timedelta(hours = t)
 
@@ -139,19 +139,19 @@ raw_data_tweets['datetime'] = raw_data_tweets.created_at.apply(lambda x:switch_t
 
 raw_data_tweets['date']= raw_data_tweets.datetime.apply(lambda x:x.date())
 
-#check columns
+# check columns
 raw_data_tweets.columns
 
 extract_columns_list_cleaning_data_use = ['date','user_id','tweet','language']
 
 cleaning_data_tweets_1 = raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
-#from 36 columns (raw data) drop to 4 columns now
+# from 36 columns (raw data) drop to 4 columns now
 
-#drop_duplicates again after fixed the date issue
+# drop_duplicates again after fixed the date issue
 cleaning_data_tweets_1.drop_duplicates(inplace = True)
 
-#save file for further step
+# save file for further step
 cleaning_data_tweets_1.to_pickle('./cleaning_data_tweets_1.pickle')
 
 """
@@ -201,7 +201,7 @@ def cleaning(temp_str):
     return filtered_sentence
 
 def stemming(filtered_sentence):
-   # nltk.download('wordnet')
+   #nltk.download('wordnet')
     lemma_word = []                              # stemming
     wordnet_lemmatizer = WordNetLemmatizer()
 
@@ -331,6 +331,8 @@ end_date = '2021-03-04'
 
 week_list = list(range(-1,364,7))
 
+# do not recommend you to do sentiment scoring again since there are about millions of comments per day
+# and it cost us more than 10 hours to get the results
 # process weekly data
 list_1 = list()
 listTotal = list()
