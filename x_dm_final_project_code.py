@@ -52,7 +52,7 @@ import matplotlib.ticker as ticker
 """
 Setting directory
 """
-path=''
+path = ''
 os.chdir(path)
 os.getcwd()
 
@@ -61,8 +61,8 @@ Setting all the path
 """
 
 #specific file to save those data
-path_raw_data=r''
-cleaning_data_path=r''
+path_raw_data = r''
+cleaning_data_path = r''
 
 """
 Mining tweets through Twint (Specific time range) 
@@ -124,23 +124,23 @@ all_files = glob.glob(path_raw_data + "/*.csv")
 li = []
 
 for filename in all_files:
-    df = pd.read_csv(filename, index_col=None, header=0)
+    df = pd.read_csv(filename, index_col = None, header = 0)
     li.append(df)
 
-raw_data_tweets_thro_twint = pd.concat(li, axis=0, ignore_index=True)
+raw_data_tweets_thro_twint = pd.concat(li, axis = 0, ignore_index = True)
 
-raw_data_tweets_thro_twint.to_pickle(path_raw_data+os.sep+'raw_data_tweets.pickle')
+raw_data_tweets_thro_twint.to_pickle('./raw_data_tweets.pickle')
 
 """
 Raw Data Cleaning and preprocessing
 """
-raw_data_tweets=pd.read_pickle(path_raw_data+os.sep+'raw_data_tweets.pickle')
+raw_data_tweets = pd.read_pickle('./raw_data_tweets.pickle')
 
 #check duplicates and drop duplicates
-raw_data_tweets.drop_duplicates(inplace=True)
+raw_data_tweets.drop_duplicates(inplace = True)
 
 #fix time in order to match the finacial data timezone
-def switch_tz(time, t=8):
+def switch_tz(time, t = 8):
     return datetime.datetime.strptime(time[:19], '%Y-%m-%d %H:%M:%S') - datetime.timedelta(hours = t)
 
 raw_data_tweets['datetime'] = raw_data_tweets.created_at.apply(lambda x:switch_tz(x))
@@ -150,35 +150,35 @@ raw_data_tweets['date']= raw_data_tweets.datetime.apply(lambda x:x.date())
 #check columns
 raw_data_tweets.columns
 
-extract_columns_list_cleaning_data_use=['date','user_id','tweet','language']
+extract_columns_list_cleaning_data_use = ['date','user_id','tweet','language']
 
-cleaning_data_tweets_1=raw_data_tweets[extract_columns_list_cleaning_data_use]
+cleaning_data_tweets_1 = raw_data_tweets[extract_columns_list_cleaning_data_use]
 cleaning_data_tweets_1.columns
 #from 36 columns (raw data) drop to 4 columns now
 
 #drop_duplicates again after fixed the date issue
-cleaning_data_tweets_1.drop_duplicates(inplace=True)
+cleaning_data_tweets_1.drop_duplicates(inplace = True)
 
 #save file for further step
-cleaning_data_tweets_1.to_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
+cleaning_data_tweets_1.to_pickle('./cleaning_data_tweets_1.pickle')
 
 """
 Read the data (check point)
 """
-cleaning_data_tweets_1=pd.read_pickle(cleaning_data_path+os.sep+'cleaning_data_tweets_1.pickle')
+cleaning_data_tweets_1 = pd.read_pickle('./cleaning_data_tweets_1.pickle')
 cleaning_data_tweets_1.iloc[1]
 
 
 """
 Sentiment Vairable (Sun Yi) Counting mentions variable  (numOfSentence)
 """
-try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis =1)
+try_df = cleaning_data_tweets_1.drop(['Unnamed: 0'],axis = 1)
 
 # need to create a new folder in the current path named "weekly"
 # split data into different weeks
 file_dir = './weekly/week_{}_data.pickle'
 for i in range(-1,364,7):
-    temp_df = try_df[(try_df['day_adjust']>=i) & (try_df['day_adjust']<=i+7)]
+    temp_df = try_df[(try_df['day_adjust'] >= i) & (try_df['day_adjust'] <= i+7)]
     temp_df.to_pickle(file_dir.format(int((i+8)/7)),index = None)
 
 # time processing
@@ -233,10 +233,10 @@ def gen_worddict(temp_df):
     lemma_word = stemming(filtered_sentence)
     
     # worddict is what we need after all cleaning
-    worddict=dict()                               #  clean some left words
+    worddict = dict()                               #  clean some left words
     
     for word in lemma_word:
-        worddict[word]=worddict.get(word,0)+1
+        worddict[word] = worddict.get(word,0) + 1
     
     return worddict
 
@@ -260,7 +260,7 @@ uncertainty = to_list(Uncertainty)
 # get sentiment vairables
 def get_matrix(day_x,data_1):
     adjust_day(data_1)
-    print('days',day_x, ' are aready adjusted!')
+    print('days', day_x, ' are aready adjusted!')
     print(data_1['day_adjust'])
     temp_df = data_1[data_1['day_adjust'] == day_x]
     print(temp_df)
@@ -298,7 +298,7 @@ def get_matrix(day_x,data_1):
    
     numOfComments = len(temp_df) 
     
-    news_sentiment = (post-neg)/numOfComments   
+    news_sentiment = (post-neg) / numOfComments   
     print("Number of words: " + str(numOfWords))
     print("Number of useful words: " + str(numOfUsefulWords))
     print("Number of sentense: " + str(numOfComments) ) 
@@ -307,32 +307,32 @@ def get_matrix(day_x,data_1):
     complex_word = list()
     numOfComplex = 0
     for word in worddict:
-        if textstat.syllable_count(word)>=3:
+        if textstat.syllable_count(word) >= 3:
             complex_word.append(word)
             numOfComplex += worddict[word]
             #print(word,worddict[word])
 
-    Fog = 0.4*(numOfWords/numOfComments+100*numOfComplex/numOfWords)   # Fog index
-    print("  -  Fog index is ",Fog)
+    Fog = 0.4*(numOfWords / numOfComments + 100*numOfComplex / numOfWords)   # Fog index
+    print("  -  Fog index is ", Fog)
     
 
     polarty_score_with_textblob = 0
     polarty_score_with_nltk = 0
 
     for sentence in temp_df['tweet']:
-        #using textblob
-        s = TextBlob(sentence).sentiment # assign sentiment score of that sentence
+        # using textblob
+        s = TextBlob(sentence).sentiment  # assign sentiment score of that sentence
         polarty_score_with_textblob += s.polarity / numOfComments
         print('Days: '+ str(day_x))
         print('Polarty score with textblob: '+ str(polarty_score_with_textblob))
-        #using nltk
+        # using nltk
         sid = SentimentIntensityAnalyzer()
-        polarty_score_with_nltk += sid.polarity_scores(sentence)['compound'] / numOfComments      #assign sentiment score of that sentence #only extract the compound score
+        polarty_score_with_nltk += sid.polarity_scores(sentence)['compound'] / numOfComments      # assign sentiment score of that sentence #only extract the compound score
         
         print('Polarty score with nltk: '+ str(polarty_score_with_nltk))
 
 
-    return worddict, post,neg,uncer, numOfWords, numOfUsefulWords, numOfComments, news_sentiment, strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk
+    return worddict, post, neg, uncer, numOfWords, numOfUsefulWords, numOfComments, news_sentiment, strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk
 
 start_date = '2020-03-01'
 end_date = '2021-03-04'
@@ -347,10 +347,10 @@ for week in week_list:
     day_list = list(range(week,week+7))
     print(range(week,week+7))
     for day_x in day_list:
-        worddict,post,neg,uncer, numOfWords,numOfUsefulWords,numOfComments,news_sentiment,strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk = get_matrix(day_x,td)
+        worddict, post, neg, uncer, numOfWords, numOfUsefulWords, numOfComments, news_sentiment, strDay, Fog, polarty_score_with_textblob, polarty_score_with_nltk = get_matrix(day_x, td)
         listTotal.append(strDay)
         
-        list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfUsefulWords': numOfUsefulWords,'numOfWords':numOfWords,'numOfComments':numOfComments, 'News_sentiment': news_sentiment,'Fog_index':Fog, 'polarty_score_with_textblob':polarty_score_with_textblob, 'polarty_score_with_nltk': polarty_score_with_nltk}
+        list_1.append({ 'day':day_x, 'postive': post, 'negative':neg, 'uncertainty':uncer, 'numOfUsefulWords': numOfUsefulWords, 'numOfWords':numOfWords, 'numOfComments':numOfComments, 'News_sentiment': news_sentiment,'Fog_index':Fog, 'polarty_score_with_textblob':polarty_score_with_textblob, 'polarty_score_with_nltk': polarty_score_with_nltk}
 
                                            
 # add back date information                     
@@ -372,19 +372,19 @@ ripple = pd.read_csv('XRP_USD Historical Data.csv')
 
 daily_return = pd.DataFrame(ripple[['Date','Change %']])
 
-daily_return.rename(columns={'Change %':'daily_return'}, inplace=True)
+daily_return.rename(columns = {'Change %':'daily_return'}, inplace = True)
 
 daily_return['volatility_30_days'] = np.nan
 # volatility for every 30 days windows
 for day in range(30, len(daily_return)):
-    daily_return['volatility_30_days'].iloc[day] = np.std(daily_return.daily_return.iloc[day-30:day])
+    daily_return['volatility_30_days'].iloc[day] = np.std(daily_return.daily_return.iloc[day - 30: day])
 daily_return = daily_return.dropna()
 
 """
 merge financial data and sentiment data
 """
-result = pd.merge(kk, daily_return, on=['Date'])
-result.set_index(['Date'], inplace=True)
+result = pd.merge(kk, daily_return, on = ['Date'])
+result.set_index(['Date'], inplace = True)
 result.to_csv('./final_data.csv')  
 
 """
@@ -451,8 +451,8 @@ all_data['Fog_index_lag_1d']=all_data['Fog_index'].shift(1)
 """
 different regression
 """
-Y_list=['daily_return','volatility_30_days']
-sentiment_score_list=["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d","Fog_index_lag_1d"]
+Y_list = ['daily_return','volatility_30_days']
+sentiment_score_list = ["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d","Fog_index_lag_1d"]
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
         print(smf.ols('{} ~ {}'.format(y,sentiment_score), all_data).fit().summary())
@@ -469,31 +469,31 @@ for y in Y_list:
 """
 Prediction with regression (sentiment to Y)
 """
-#Can we this regression to predict future return and future 30 days volatility (testing set)
-#We use testing mse to compare the prediction model performance
-result_list=[]
+# Can we this regression to predict future return and future 30 days volatility (testing set)
+# We use testing mse to compare the prediction model performance
+result_list = []
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
-        a=smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
+        a = smf.ols('{} ~ {}'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
         next_y = all_data.iloc[-35:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]
+        predicted_x = a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"sentiment_Y,{},{},mse_testing".format(y,sentiment_score):mse_testing})
+        result_list.append({"sentiment_Y, {}, {}, mse_testing".format(y,sentiment_score): mse_testing})
 
 #predict with only mentions count
 for y in Y_list:
-        a=smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-35]).fit().summary2().tables[1]
+        a = smf.ols('{} ~ numOfComments_lag_1d'.format(y), all_data[:-35]).fit().summary2().tables[1]
         next_y = all_data.iloc[-35:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['numOfComments_lag_1d']
+        predicted_x = a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['numOfComments_lag_1d']
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"sentiment_Y,{},numOfComments_lag_1d,mse_testing".format(y):mse_testing})
+        result_list.append({"sentiment_Y, {}, numOfComments_lag_1d, mse_testing".format(y): mse_testing})
 
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
     for sentiment_score in sentiment_score_list:
-        a=smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
+        a = smf.ols('{} ~ {} + numOfComments_lag_1d'.format(y,sentiment_score), all_data[:-35]).fit().summary2().tables[1]
         next_y = all_data.iloc[-35:]['{}'.format(y)]
-        predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-35:]["numOfComments_lag_1d"]
+        predicted_x = a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-35:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
         result_list.append({"sentiment_Y,{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
 
@@ -501,15 +501,15 @@ for y in Y_list:
 Machine learning (Sentiment to Y)
 """""
 # drop for further setting features use
-all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1).dropna()
-label_all_data_ml_sentiment_Y=pd.concat([all_data_ml_sentiment_Y.pop(x) for x in ['daily_return', 'volatility_30_days']],axis=1)
+all_data_ml_sentiment_Y = all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis = 1).dropna()
+label_all_data_ml_sentiment_Y = pd.concat([all_data_ml_sentiment_Y.pop(x) for x in ['daily_return', 'volatility_30_days']],axis = 1)
 
 """
 random forest
 """
 
 # Convert to numpy array
-features= all_data_ml_sentiment_Y.iloc[:,1:]
+features = all_data_ml_sentiment_Y.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
@@ -527,9 +527,9 @@ for y in Y_list:
     # Use the forest's predict method on the test data
     predictions = rf.predict(test_features)
     # Calculate the mean squared errors testing
-    mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
+    mse_testing = np.square(np.subtract(predictions, test_labels)).mean()
     #mse for machine learning
-    result_list.append({"sentiment_Y,{},random_forest,mse_testing".format(y):mse_testing})
+    result_list.append({"sentiment_Y, {}, random_forest, mse_testing".format(y): mse_testing})
                       
 """
 SVM (SVR)
@@ -538,13 +538,13 @@ svr_training_x = all_data_ml_sentiment_Y.iloc[:-35,1:]
 svr_testing_x = all_data_ml_sentiment_Y.iloc[-35:,1:]
                       
 for y in Y_list:
-    svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
+    svr = SVR(kernel = 'rbf', epsilon = 0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
     svr_training_y = label_all_data_ml_sentiment_Y["{}".format(y)].iloc[:-35]
-    svr.fit(svr_training_x,svr_training_y)
+    svr.fit(svr_training_x, svr_training_y)
     
     y_svr = svr.predict(svr_testing_x)
     svr_testing_y = label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
-    result_list.append({"sentiment_Y,{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
+    result_list.append({"sentiment_Y, {}, SVR, mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
                        
 """
 Lasso regression (machine learning)
@@ -552,13 +552,13 @@ Lasso regression (machine learning)
 lasso_training_x = all_data_ml_sentiment_Y.iloc[:-35,3:]
 lasso_testing_x = all_data_ml_sentiment_Y.iloc[-35:,3:]
 for y in Y_list:
-    clf = linear_model.Lasso(alpha=0.1)
+    clf = linear_model.Lasso(alpha  =0.1)
     lasso_training_y = label_all_data_ml_sentiment_Y["{}".format(y)].iloc[:-35]
-    clf.fit(lasso_training_x,lasso_training_y)
-    y_lasso=clf.predict(lasso_testing_x)
+    clf.fit(lasso_training_x, lasso_training_y)
+    y_lasso = clf.predict(lasso_testing_x)
                       
     lasso_testing_y = label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
-    result_list.append({"sentiment_Y,{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
+    result_list.append({"sentiment_Y,{},lasso,mse_testing".format(y): np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
                        
 """
 Text directly apply machine learning to predict
@@ -567,9 +567,9 @@ Text directly apply machine learning to predict
 DateFrame prepare for (text to machine learning)
 """
 xrp_data = pd.read_csv('final_data.csv')[['Date', 'daily_return', 'volatility_30_days']].reset_index()
-lsa_data = pd.read_csv('lsa_data.csv', index_col=0).reset_index()
+lsa_data = pd.read_csv('lsa_data.csv', index_col = 0).reset_index()
 
-lsa_ml_data = pd.merge(xrp_data, lsa_data, on='index').drop(columns='index') 
+lsa_ml_data = pd.merge(xrp_data, lsa_data, on = 'index').drop(columns = 'index') 
                       
 """
 machine learning apply
@@ -578,18 +578,18 @@ machine learning apply
 prepare ml training and testing data
 """                    
 # Saving feature names for later use
-#all sample start from 2020-03-02
+# all sample start from 2020-03-02
 lsa_features = lsa_ml_data.iloc[:,3:].shift(1) 
 
 # Convert to numpy array
 lsa_features = np.array(lsa_features)
 
 # Labels are the values we want to predict
-lsa_labels_ret = np.array(lsa_ml_data['daily_return']) #'daily_return'
-lsa_labels_vol = np.array(lsa_ml_data['volatility_30_days']) #'volatility_30_days'
+lsa_labels_ret = np.array(lsa_ml_data['daily_return']) # 'daily_return'
+lsa_labels_vol = np.array(lsa_ml_data['volatility_30_days']) # 'volatility_30_days'
 
 
-#split last 35 days for test sample
+# split last 35 days for test sample
 lsa_train_features = lsa_features[1:-35]
 lsa_train_labels_ret = lsa_labels_ret[1:-35]
 lsa_train_labels_vol = lsa_labels_vol[1:-35]
@@ -614,27 +614,27 @@ lsa_rf_predictions_ret = lsa_rf_ret.predict(lsa_test_features)
 lsa_rf_predictions_vol = lsa_rf_vol.predict(lsa_test_features)
 
 # Calculate the mean squared errors testing
-RF_mse_testing_ret = np.square(np.subtract(lsa_rf_predictions_ret,lsa_test_labels_ret)).mean()
-RF_mse_testing_vol = np.square(np.subtract(lsa_rf_predictions_vol,lsa_test_labels_vol)).mean()
+RF_mse_testing_ret = np.square(np.subtract(lsa_rf_predictions_ret, lsa_test_labels_ret)).mean()
+RF_mse_testing_vol = np.square(np.subtract(lsa_rf_predictions_vol, lsa_test_labels_vol)).mean()
 
 """
 SVM (SVR)
 """
  
-# kernel= Radial basis function kernel, we can also set it as linear/ploy/others
+# kernel = Radial basis function kernel, we can also set it as linear/ploy/others
 lsa_svr_ret = SVR(kernel='rbf', epsilon=0.05) 
 lsa_svr_vol = SVR(kernel='rbf', epsilon=0.05) 
 
 
-lsa_svr_ret.fit(lsa_train_features,lsa_train_labels_ret)
-lsa_svr_vol.fit(lsa_train_features,lsa_train_labels_vol)
+lsa_svr_ret.fit(lsa_train_features, lsa_train_labels_ret)
+lsa_svr_vol.fit(lsa_train_features, lsa_train_labels_vol)
 
 
 lsa_svr_rf_predictions_ret = lsa_svr_ret.predict(lsa_test_features)
 lsa_svr_rf_predictions_vol = lsa_svr_vol.predict(lsa_test_features)
 
-SVR_mse_testing_ret = np.square(np.subtract(lsa_svr_rf_predictions_ret,lsa_test_labels_ret)).mean()
-SVR_mse_testing_vol = np.square(np.subtract(lsa_svr_rf_predictions_vol,lsa_test_labels_vol)).mean()
+SVR_mse_testing_ret = np.square(np.subtract(lsa_svr_rf_predictions_ret, lsa_test_labels_ret)).mean()
+SVR_mse_testing_vol = np.square(np.subtract(lsa_svr_rf_predictions_vol, lsa_test_labels_vol)).mean()
     
 """
 Lasso regression (machine learning)
@@ -649,8 +649,8 @@ lsa_lasso_vol.fit(lsa_train_features, lsa_train_labels_vol)
 lsa_lasso_predictions_ret=lsa_lasso_ret.predict(lsa_test_features)
 lsa_lasso_predictions_vol=lsa_lasso_vol.predict(lsa_test_features)
 
-lasso_mse_testing_ret = np.square(np.subtract(lsa_lasso_predictions_ret,lsa_test_labels_ret)).mean()
-lasso_mse_testing_vol = np.square(np.subtract(lsa_lasso_predictions_vol,lsa_test_labels_vol)).mean()
+lasso_mse_testing_ret = np.square(np.subtract(lsa_lasso_predictions_ret, lsa_test_labels_ret)).mean()
+lasso_mse_testing_vol = np.square(np.subtract(lsa_lasso_predictions_vol, lsa_test_labels_vol)).mean()
                             
 """
 save those results
@@ -667,15 +667,15 @@ dict_all_mse_sentiment_y = {}
 for dict_mse in result_list:
     dict_all_mse_sentiment_y.update(dict_mse)
 series_all_mse_sentiment_y = pd.Series(dict_all_mse_sentiment_y).sort_values(axis='index')
-df_vol_all_mse_sentiment_y = pd.DataFrame({'volatility_30_days':series_all_mse_sentiment_y[:12]})
-df_return_all_mse_sentiment_y = pd.DataFrame({"daily_return":series_all_mse_sentiment_y[12:]})
+df_vol_all_mse_sentiment_y = pd.DataFrame({'volatility_30_days': series_all_mse_sentiment_y[:12]})
+df_return_all_mse_sentiment_y = pd.DataFrame({"daily_return": series_all_mse_sentiment_y[12:]})
 
 # text to Y
 mse_result_texttoY_df = pd.DataFrame.from_dict(mse_result_texttoY).T
 mse_result_texttoY_df = mse_result_texttoY_df.rename(columns = {0: "daily_return", 1: "volatility_30_days"})
                        
 # easy for compare
-testing_mse_daily_return_compare = pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y],join = 'inner')
+testing_mse_daily_return_compare = pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y], join = 'inner')
 testing_mse_daily_return_compare = testing_mse_daily_return_compare.sort_values(by = 'daily_return')
 
 testing_mse_volatility_30_days_compare = pd.concat([mse_result_texttoY_df,df_vol_all_mse_sentiment_y],join = 'inner')
@@ -687,7 +687,7 @@ print(testing_mse_volatility_30_days_compare)
 # best model(by smallest testing mse)
 # In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
-#plot testing actual y and predict y
+# plot testing actual y and predict y
 y=Y_list[0]
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
 train_labels = labels[:-35]
@@ -696,12 +696,12 @@ rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
 rf.fit(train_features, train_labels)
 predictions = rf.predict(test_features)
 
-predictions_df = pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+predictions_df = pd.concat([pd.DataFrame(predictions), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 predictions_df = predictions_df.drop(columns = 'index')
 predictions_df['Date'] = pd.to_datetime(predictions_df['Date'])
 predictions_df=predictions_df.set_index("Date")
 
-test_labels_df = pd.concat([pd.DataFrame(test_labels),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+test_labels_df = pd.concat([pd.DataFrame(test_labels), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 test_labels_df = test_labels_df.drop(columns = 'index')
 test_labels_df['Date'] = pd.to_datetime(test_labels_df['Date'])
 test_labels_df = test_labels_df.set_index("Date")
@@ -718,12 +718,12 @@ plt.show()
 # In predicting volatility_30_days
 print(testing_mse_volatility_30_days_compare.head(1))
 # plot testing actual y and predict y
-predictions_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_rf_predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+predictions_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_rf_predictions_vol), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 predictions_RF_text_to_y_df = predictions_RF_text_to_y_df.drop(columns = 'index')
-predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
+predictions_RF_text_to_y_df['Date'] = pd.to_datetime(predictions_RF_text_to_y_df['Date'])
 predictions_RF_text_to_y_df = predictions_RF_text_to_y_df.set_index("Date")
 
-test_labels_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_test_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+test_labels_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_test_labels_vol), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 test_labels_RF_text_to_y_df = test_labels_RF_text_to_y_df.drop(columns = 'index')
 test_labels_RF_text_to_y_df['Date'] = pd.to_datetime(test_labels_RF_text_to_y_df['Date'])
 test_labels_RF_text_to_y_df = test_labels_RF_text_to_y_df.set_index("Date")
@@ -749,12 +749,12 @@ rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
 rf.fit(whole_features, whole_labels)
 predictions = rf.predict(whole_features)
 
-predictions_df = pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+predictions_df = pd.concat([pd.DataFrame(predictions), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 predictions_df = predictions_df.drop(columns = 'index')
 predictions_df['Date'] = pd.to_datetime(predictions_df['Date'])
 predictions_df = predictions_df.set_index("Date")
 
-whole_labels_df = pd.concat([pd.DataFrame(whole_labels),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+whole_labels_df = pd.concat([pd.DataFrame(whole_labels), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 whole_labels_df = whole_labels_df.drop(columns = 'index')
 whole_labels_df['Date'] = pd.to_datetime(whole_labels_df['Date'])
 whole_labels_df = whole_labels_df.set_index("Date")
@@ -776,12 +776,12 @@ rf_vol.fit(whole_lsa_rf_features, whole_lsa_rf_labels_vol)
 lsa_rf_whole_predictions_vol = rf_vol.predict(whole_lsa_ml_features)
 
 
-predictions_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_rf_whole_predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+predictions_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_rf_whole_predictions_vol), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 predictions_RF_text_to_y_df = predictions_RF_text_to_y_df.drop(columns = 'index')
 predictions_RF_text_to_y_df['Date'] = pd.to_datetime(predictions_RF_text_to_y_df['Date'])
 predictions_RF_text_to_y_df = predictions_RF_text_to_y_df.set_index("Date")
 
-whole_labels_RF_text_to_y_df = pd.concat([pd.DataFrame(whole_lsa_rf_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis = 1)
+whole_labels_RF_text_to_y_df = pd.concat([pd.DataFrame(whole_lsa_rf_labels_vol), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
 whole_labels_RF_text_to_y_df = whole_labels_RF_text_to_y_df.drop(columns = 'index')
 whole_labels_RF_text_to_y_df['Date'] = pd.to_datetime(whole_labels_RF_text_to_y_df['Date'])
 whole_labels_RF_text_to_y_df = whole_labels_RF_text_to_y_df.set_index("Date")
