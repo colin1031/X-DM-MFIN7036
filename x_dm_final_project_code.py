@@ -522,7 +522,7 @@ for y in Y_list:
     rf.fit(train_features, train_labels)
     # Use the forest's predict method on the test data
     predictions = rf.predict(test_features)
-    # Calculate the absolute errors
+    # Calculate the mean squared errors testing
     mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
     #mse for machine learning
     result_list.append({"sentiment_Y,{},random_forest,mse_testing".format(y):mse_testing})
@@ -612,7 +612,7 @@ lsa_rf_vol.fit(lsa_train_features, lsa_train_labels_vol)
 lsa_rf_predictions_ret = lsa_rf_ret.predict(lsa_test_features)
 lsa_rf_predictions_vol = lsa_rf_vol.predict(lsa_test_features)
 
-# Calculate the absolute errors
+# Calculate the mean squared errors testing
 RF_mse_testing_ret = np.square(np.subtract(lsa_rf_predictions_ret,lsa_test_labels_ret)).mean()
 RF_mse_testing_vol = np.square(np.subtract(lsa_rf_predictions_vol,lsa_test_labels_vol)).mean()
 
@@ -687,24 +687,17 @@ print(testing_mse_volatility_30_days_compare)
 #In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
 #plot testing actual y and predict y
-
-# Convert to numpy array
 features= all_data_ml_sentiment_Y.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
 test_features = features[-35:]
 y=Y_list[0]
-# Labels are the values we want to predict
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
-# Saving feature names for later use
 train_labels = labels[:-35]
 test_labels = labels[-35:]
-# Instantiate model with 100 decision trees
 rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
-# Train the model on training data
 rf.fit(train_features, train_labels)
-# Use the forest's predict method on the test data
 predictions = rf.predict(test_features)
 
 predictions_df=pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
@@ -758,9 +751,65 @@ plt.legend()
 plt.show()
 
                        
-"""
-After we find out the best prediction model (from sentiment to return/30 days volatility)
-"""
-#fit the model with whole data set
 
-#plotting
+"""
+After we find out the best model (from sentiment to return/30 days volatility)
+use the full dataset to produce final model and plot
+"""
+#In daily return
+features= all_data_ml_sentiment_Y.iloc[:,1:]
+features.columns
+features = np.array(features)
+whole_features = features[:]
+y=Y_list[0]
+labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
+whole_labels = labels[:]
+rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
+rf.fit(whole_features, whole_labels)
+predictions = rf.predict(whole_features)
+
+predictions_df=pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_df=predictions_df.drop(columns='index')
+predictions_df['Date']=pd.to_datetime(predictions_df['Date'])
+predictions_df=predictions_df.set_index("Date")
+
+whole_labels_df=pd.concat([pd.DataFrame(whole_labels),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+whole_labels_df=whole_labels_df.drop(columns='index')
+whole_labels_df['Date']=pd.to_datetime(whole_labels_df['Date'])
+whole_labels_df=whole_labels_df.set_index("Date")
+
+plt.rcParams["figure.figsize"] = (10.5, 6)
+plt.title('daily_return_final_model_result')
+plt.plot(predictions_df, label = "RF_predict_y_whole_set")
+plt.plot(whole_labels_df, label = "RF_actual_y_whole_set")
+plt.legend()
+plt.show()
+
+#In volatility_30_days
+features = ml_data.iloc[:,3:].shift(1) 
+features = np.array(features)
+labels_vol = np.array(ml_data['volatility_30_days']) 
+whole_features = features[1:]
+whole_labels_vol = labels_vol[1:]
+
+rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
+rf_vol.fit(whole_features, whole_labels_vol)
+predictions_vol = rf_vol.predict(whole_features)
+
+
+predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.drop(columns='index')
+predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
+predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.set_index("Date")
+
+whole_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(whole_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+whole_labels_RF_text_to_y_df=whole_labels_RF_text_to_y_df.drop(columns='index')
+whole_labels_RF_text_to_y_df['Date']=pd.to_datetime(whole_labels_RF_text_to_y_df['Date'])
+whole_labels_RF_text_to_y_df=whole_labels_RF_text_to_y_df.set_index("Date")
+
+plt.rcParams["figure.figsize"] = (10.5, 6)
+plt.title('volatility_30_days_final_model_result')
+plt.plot(predictions_RF_text_to_y_df, label = "RF_predict_y_whole_set")
+plt.plot(whole_labels_RF_text_to_y_df, label = "RF_actual_y_whole_set")
+plt.legend()
+plt.show()
