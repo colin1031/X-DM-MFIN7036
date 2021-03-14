@@ -667,14 +667,17 @@ for dict_mse in result_list:
 series_all_mse_sentiment_y=pd.Series(dict_all_mse_sentiment_y).sort_values(axis='index')
 df_vol_all_mse_sentiment_y=pd.DataFrame({'volatility_30_days':series_all_mse_sentiment_y[:12]})
 df_return_all_mse_sentiment_y=pd.DataFrame({"daily_return":series_all_mse_sentiment_y[12:]})
-print(df_vol_all_mse_sentiment_y)
-print(df_return_all_mse_sentiment_y)
 
 #text to Y
 mse_result_texttoY_df=pd.DataFrame.from_dict(mse_result_texttoY).T
 mse_result_texttoY_df=mse_result_texttoY_df.rename(columns={0: "daily_return", 1: "volatility_30_days"})
-print(mse_result_texttoY_df)
+                       
+#easy for compare
+testing_mse_daily_return_compare=pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y],join='inner')
+testing_mse_volatility_30_days_compare=pd.concat([mse_result_texttoY_df,df_return_all_mse_sentiment_y],join='inner')
 
+print(testing_mse_daily_return_compare)
+print(testing_mse_volatility_30_days_compare)
                        
 """
 After we find out the best prediction model (from sentiment to return/30 days volatility)
