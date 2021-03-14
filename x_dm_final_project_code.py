@@ -764,7 +764,7 @@ whole_lsa_rf_labels_vol = lsa_labels_vol[1:]
 
 rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
 rf_vol.fit(whole_lsa_rf_features, whole_lsa_rf_labels_vol)
-lsa_rf_whole_predictions_vol = rf_vol.predict(whole_lsa_ml_features)
+lsa_rf_whole_predictions_vol = rf_vol.predict(whole_lsa_rf_features)
 
 
 predictions_RF_text_to_y_df = pd.concat([pd.DataFrame(lsa_rf_whole_predictions_vol), all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()], axis = 1)
