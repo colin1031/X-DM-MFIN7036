@@ -658,8 +658,8 @@ dict_all_mse_sentiment_y = {}
 for dict_mse in result_list:
     dict_all_mse_sentiment_y.update(dict_mse)
 series_all_mse_sentiment_y = pd.Series(dict_all_mse_sentiment_y).sort_values(axis='index')
-df_vol_all_mse_sentiment_y = pd.DataFrame({'volatility_30_days': series_all_mse_sentiment_y[:12]})
-df_return_all_mse_sentiment_y = pd.DataFrame({"daily_return": series_all_mse_sentiment_y[12:]})
+df_vol_all_mse_sentiment_y = pd.DataFrame({'volatility_30_days': series_all_mse_sentiment_y[:10]})
+df_return_all_mse_sentiment_y = pd.DataFrame({"daily_return": series_all_mse_sentiment_y[10:]})
 
 # text to Y
 mse_result_texttoY_df = pd.DataFrame.from_dict(mse_result_texttoY).T
