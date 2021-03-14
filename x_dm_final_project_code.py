@@ -511,7 +511,7 @@ random forest
 all_data_rondom_forest=all_data_ml_sentiment_Y.dropna()
 all_data_rondom_forest.columns
 # Convert to numpy array
-features= all_data_rondom_forest.iloc[:,3:]
+features= all_data_rondom_forest.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
@@ -538,8 +538,8 @@ SVM (SVR)
 """
 all_data_SVR=all_data_ml_sentiment_Y.dropna()
                       
-svr_training_x=all_data_SVR.iloc[:-35,3:]
-svr_testing_x=all_data_SVR.iloc[-35:,3:]
+svr_training_x=all_data_SVR.iloc[:-35,1:]
+svr_testing_x=all_data_SVR.iloc[-35:,1:]
                       
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
@@ -554,8 +554,8 @@ for y in Y_list:
 Lasso regression (machine learning)
 """
 all_data_lasso=all_data_ml_sentiment_Y.dropna()
-lasso_training_x=all_data_lasso.iloc[:-35,3:]
-lasso_testing_x=all_data_lasso.iloc[-35:,3:]
+lasso_training_x=all_data_lasso.iloc[:-35,1:]
+lasso_testing_x=all_data_lasso.iloc[-35:,1:]
 for y in Y_list:
     clf = linear_model.Lasso(alpha=0.1)
     lasso_training_y= all_data_lasso["{}".format(y)].iloc[:-35]
