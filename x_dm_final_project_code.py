@@ -416,11 +416,13 @@ y_1 = data['News_sentiment']
 y_2 = data['polarty_score_with_nltk']
 y_3 = data['polarty_score_with_textblob']
 y_4 = data['daily_return']
+y_5 = data['volatility_30_days']
 
-plt.plot(x, y_1, color = 'red', marker = 'D', mec='r', mfc='w', linestyle = '-',lw=1  , ms=3, label = 'News Sentiment Score')
-plt.plot(x, y_2, color = 'blue', marker = 's', mec='b', mfc='w',linestyle = '-',lw=1  , ms=3, label = 'Polarty Score With nltks')
-plt.plot(x, y_3, color = 'green', marker = 'o', mec='g', mfc='w', linestyle = '-', lw=1  , ms=3, label = 'Polarty Score With textblob')
-plt.plot(x, y_4, color = 'yellow', marker = '*', mec='y', mfc='w', linestyle = '-', lw=2  , ms=4, label = 'Real Daily Return')
+plt.plot(x, y_1, color = 'springgreen', mec = 'r', mfc = 'w', linestyle = '-',lw = 1  , ms = 3, label = 'News Sentiment Score')
+plt.plot(x, y_2, color = 'orangered', mec = 'b', mfc = 'w',linestyle = '-',lw = 1  , ms = 3, label = 'Polarty Score With nltks')
+plt.plot(x, y_3, color = 'royalblue', mec ='g', mfc ='w', linestyle = '-', lw = 1  , ms = 3, label = 'Polarty Score With textblob')
+plt.plot(x, y_4, color = 'gold', mec = 'y', mfc = 'w', linestyle = '-', lw = 1.5  , ms = 4, label = 'Real Daily Return')
+plt.plot(x, y_5, color = 'violet', mec = 'y', mfc = 'w', linestyle = '-', lw = 1.5  , ms = 4, label = 'Real Daily Return')
 
 
 plt.legend() 
