@@ -405,7 +405,6 @@ ll.to_csv('./lsa_data.csv')
 """                      
 Visualization of Sentiment Scores
 """
-plt.figure()                     
 fig, ax = plt.subplots(1, 1)
 
 data = pd.read_csv('final_data.csv')
