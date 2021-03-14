@@ -687,10 +687,42 @@ print(testing_mse_volatility_30_days_compare)
 #In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
 #plot testing actual y and predict y
-                      
-#In predicting volatility_30_days
-print(testing_mse_volatility_30_days_compare.head(1))
-#plot testing actual y and predict y
+
+# Convert to numpy array
+features= all_data_ml_sentiment_Y.iloc[:,1:]
+features.columns
+features = np.array(features)
+train_features = features[:-35]
+test_features = features[-35:]
+y=Y_list[0]
+# Labels are the values we want to predict
+labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
+# Saving feature names for later use
+train_labels = labels[:-35]
+test_labels = labels[-35:]
+# Instantiate model with 100 decision trees
+rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
+# Train the model on training data
+rf.fit(train_features, train_labels)
+# Use the forest's predict method on the test data
+predictions = rf.predict(test_features)
+
+predictions_df=pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+predictions_df=predictions_df.drop(columns='index')
+predictions_df['Date']=pd.to_datetime(predictions_df['Date'])
+predictions_df=predictions_df.set_index("Date")
+
+test_labels_df=pd.concat([pd.DataFrame(test_labels),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
+test_labels_df=test_labels_df.drop(columns='index')
+test_labels_df['Date']=pd.to_datetime(test_labels_df['Date'])
+test_labels_df=test_labels_df.set_index("Date")
+
+plt.rcParams["figure.figsize"] = (10.5, 6)
+plt.title('daily_return_best_prediction_testing_result')
+plt.plot(predictions_df, label = "RF_predict_y_testing_set")
+plt.plot(test_labels_df, label = "RF_actual_y_testing_set")
+plt.legend()
+plt.show()
 
 
                        
