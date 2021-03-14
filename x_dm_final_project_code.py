@@ -522,7 +522,7 @@ for y in Y_list:
     rf.fit(train_features, train_labels)
     # Use the forest's predict method on the test data
     predictions = rf.predict(test_features)
-    # Calculate the mean squared errors testing
+    # Calculate the absolute errors
     mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
     #mse for machine learning
     result_list.append({"sentiment_Y,{},random_forest,mse_testing".format(y):mse_testing})
@@ -575,81 +575,81 @@ machine learning apply
 """
 '''
 prepare ml training and testing data
-'''                      
+'''                    
 # Saving feature names for later use
 #all sample start from 2020-03-02
-features = ml_data.iloc[:,3:].shift(1) 
+lsa_features = lsa_ml_data.iloc[:,3:].shift(1) 
 
 # Convert to numpy array
-features = np.array(features)
+lsa_features = np.array(lsa_features)
 
 # Labels are the values we want to predict
-labels_ret = np.array(ml_data['daily_return']) #'daily_return'
-labels_vol = np.array(ml_data['volatility_30_days']) #'volatility_30_days'
+lsa_labels_ret = np.array(lsa_ml_data['daily_return']) #'daily_return'
+lsa_albels_vol = np.array(lsa_ml_data['volatility_30_days']) #'volatility_30_days'
 
 
 #split last 35 days for test sample
-train_features = features[1:-35]
-train_labels_ret = labels_ret[1:-35]
-train_labels_vol = labels_vol[1:-35]
+lsa_train_features = lsa_features[1:-35]
+lsa_train_labels_ret = lsa_labels_ret[1:-35]
+lsa_train_labels_vol = lsa_albels_vol[1:-35]
 
-test_features = features[-35:]
-test_labels_ret = labels_ret[-35:]
-test_labels_vol = labels_vol[-35:]
-
+lsa_test_features = lsa_features[-35:]
+lsa_test_labels_ret = lsa_labels_ret[-35:]
+lsa_test_labels_vol = lsa_albels_vol[-35:]
+      
 """
 random forest
 """
-
+ 
 # Instantiate model with 100 decision trees
-rf_ret = RandomForestRegressor(n_estimators = 100, random_state = 10)
-rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
+lsa_rf_ret = RandomForestRegressor(n_estimators = 100, random_state = 10)
+lsa_rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
 # Train the model on training data
-rf_ret.fit(train_features, train_labels_ret)
-rf_vol.fit(train_features, train_labels_vol)
+lsa_rf_ret.fit(lsa_train_features, lsa_train_labels_ret)
+lsa_rf_vol.fit(lsa_train_features, lsa_train_labels_vol)
 
 # Use the forest's predict method on the test data
-predictions_ret = rf_ret.predict(test_features)
-predictions_vol = rf_vol.predict(test_features)
+lsa_rf_predictions_ret = lsa_rf_ret.predict(lsa_test_features)
+lsa_rf_predictions_vol = lsa_rf_vol.predict(lsa_test_features)
 
-# Calculate the mean squared errors (testing)
-RF_mse_testing_ret = np.square(np.subtract(predictions_ret,test_labels_ret)).mean()
-RF_mse_testing_vol = np.square(np.subtract(predictions_vol,test_labels_vol)).mean()
+# Calculate the absolute errors
+RF_mse_testing_ret = np.square(np.subtract(lsa_rf_predictions_ret,lsa_test_labels_ret)).mean()
+RF_mse_testing_vol = np.square(np.subtract(lsa_rf_predictions_vol,lsa_test_labels_vol)).mean()
 
 """
 SVM (SVR)
 """
-    
+ 
 #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
-svr_ret = SVR(kernel='rbf', epsilon=0.05) 
-svr_vol = SVR(kernel='rbf', epsilon=0.05) 
+lsa_svr_ret = SVR(kernel='rbf', epsilon=0.05) 
+lsa_svr_vol = SVR(kernel='rbf', epsilon=0.05) 
 
 
-svr_ret.fit(train_features,train_labels_ret)
-svr_vol.fit(train_features,train_labels_vol)
+lsa_svr_ret.fit(lsa_train_features,lsa_train_labels_ret)
+lsa_svr_vol.fit(lsa_train_features,lsa_train_labels_vol)
 
 
-SVR_predictions_ret = svr_ret.predict(test_features)
-SVR_predictions_vol = svr_vol.predict(test_features)
+lsa_svr_rf_predictions_ret = lsa_svr_ret.predict(lsa_test_features)
+lsa_svr_rf_predictions_vol = lsa_svr_vol.predict(lsa_test_features)
 
-SVR_mse_testing_ret = np.square(np.subtract(SVR_predictions_ret,test_labels_ret)).mean()
-SVR_mse_testing_vol = np.square(np.subtract(SVR_predictions_vol,test_labels_vol)).mean()
+SVR_mse_testing_ret = np.square(np.subtract(lsa_svr_rf_predictions_ret,lsa_test_labels_ret)).mean()
+SVR_mse_testing_vol = np.square(np.subtract(lsa_svr_rf_predictions_vol,lsa_test_labels_vol)).mean()
     
 """
 Lasso regression (machine learning)
 """
                       
-lasso_ret = linear_model.Lasso(alpha=0.1)
-lasso_vol = linear_model.Lasso(alpha=0.1)
+lsa_lasso_ret = linear_model.Lasso(alpha=0.1)
+lsa_lasso_vol = linear_model.Lasso(alpha=0.1)
 
-lasso_ret.fit(train_features, train_labels_ret)
-lasso_vol.fit(train_features, train_labels_vol)
+lsa_lasso_ret.fit(lsa_train_features, lsa_train_labels_ret)
+lsa_lasso_vol.fit(lsa_train_features, lsa_train_labels_vol)
 
-lasso_predictions_ret=lasso_ret.predict(test_features)
-lasso_predictions_vol=lasso_vol.predict(test_features)
+lsa_lasso_predictions_ret=lsa_lasso_ret.predict(lsa_test_features)
+lsa_lasso_predictions_vol=lsa_lasso_vol.predict(lsa_test_features)
 
-lasso_mse_testing_ret = np.square(np.subtract(lasso_predictions_ret,test_labels_ret)).mean()
-lasso_mse_testing_vol = np.square(np.subtract(lasso_predictions_vol,test_labels_vol)).mean()
+lasso_mse_testing_ret = np.square(np.subtract(lsa_lasso_predictions_ret,lsa_test_labels_ret)).mean()
+lasso_mse_testing_vol = np.square(np.subtract(lsa_lasso_predictions_vol,lsa_test_labels_vol)).mean()
                             
 """
 save those results
@@ -687,17 +687,24 @@ print(testing_mse_volatility_30_days_compare)
 #In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
 #plot testing actual y and predict y
+
+# Convert to numpy array
 features= all_data_ml_sentiment_Y.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
 test_features = features[-35:]
 y=Y_list[0]
+# Labels are the values we want to predict
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
+# Saving feature names for later use
 train_labels = labels[:-35]
 test_labels = labels[-35:]
+# Instantiate model with 100 decision trees
 rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
+# Train the model on training data
 rf.fit(train_features, train_labels)
+# Use the forest's predict method on the test data
 predictions = rf.predict(test_features)
 
 predictions_df=pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
@@ -717,38 +724,6 @@ plt.plot(test_labels_df, label = "RF_actual_y_testing_set")
 plt.legend()
 plt.show()
 
-                                      
-#In predicting volatility_30_days
-print(testing_mse_volatility_30_days_compare.head(1))
-#plot testing actual y and predict y
-features = ml_data.iloc[:,3:].shift(1) 
-features = np.array(features)
-labels_vol = np.array(ml_data['volatility_30_days']) #'volatility_30_days'
-train_features = features[1:-35]
-train_labels_vol = labels_vol[1:-35]
-test_features = features[-35:]
-test_labels_vol = labels_vol[-35:]
-rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
-rf_vol.fit(train_features, train_labels_vol)
-predictions_vol = rf_vol.predict(test_features)
-
-
-predictions_RF_text_to_y_df=pd.concat([pd.DataFrame(predictions_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
-predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.drop(columns='index')
-predictions_RF_text_to_y_df['Date']=pd.to_datetime(predictions_RF_text_to_y_df['Date'])
-predictions_RF_text_to_y_df=predictions_RF_text_to_y_df.set_index("Date")
-
-test_labels_RF_text_to_y_df=pd.concat([pd.DataFrame(test_labels_vol),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
-test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.drop(columns='index')
-test_labels_RF_text_to_y_df['Date']=pd.to_datetime(test_labels_RF_text_to_y_df['Date'])
-test_labels_RF_text_to_y_df=test_labels_RF_text_to_y_df.set_index("Date")
-
-plt.rcParams["figure.figsize"] = (10.5, 6)
-plt.title('volatility_30_days_best_prediction_testing_result')
-plt.plot(predictions_RF_text_to_y_df, label = "RF_predict_y_testing_set")
-plt.plot(test_labels_RF_text_to_y_df, label = "RF_actual_y_testing_set")
-plt.legend()
-plt.show()
 
                        
 """
