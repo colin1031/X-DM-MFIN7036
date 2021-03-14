@@ -54,11 +54,8 @@ from sklearn import linear_model
 """
 Setting directory
 """
-os.getcwd()
-
 path=''
 os.chdir(path)
-
 os.getcwd()
 
 """
@@ -67,7 +64,6 @@ Setting all the path
 
 #specific file to save those data
 path_raw_data=r''
-
 cleaning_data_path=r''
 
 """
