@@ -360,6 +360,7 @@ kk.drop(kk.columns[0], axis = 1, inplace = True)
 kk['Date'] = dates
 kk.set_index(['Date'], inplace=True)
 
+                      
 
 """
 financial dataset related (calculate 30 days volatility, etc.)
@@ -384,9 +385,26 @@ merge financial data and sentiment data
 result = pd.merge(kk, daily_return, on=['Date'])
 result.set_index(['Date'], inplace=True)
 result.to_csv('./final_data.csv')  
-                      
-# Visualization of Sentiment Scores
 
+"""
+text to vector # tfidf and LSA(Dimensionality Reduction) for text to Y analysis
+"""
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(listTotal) 
+terms = vectorizer.get_feature_names()
+print(terms)
+
+n_pick_topics = 1362          # reduce dimensions to 1362
+lsa = TruncatedSVD(n_pick_topics)
+X2 = lsa.fit_transform(X)
+print(X2)  
+ll = pd.DataFrame(X2)
+ll.to_csv('./lsa_data.csv')      
+                      
+"""                      
+Visualization of Sentiment Scores
+"""
+                      
 fig, ax = plt.subplots(1, 1)
 
 data = pd.read_csv('final_data.csv')
@@ -542,23 +560,7 @@ for y in Y_list:
                        
 """
 Text directly apply machine learning to predict
-"""
-"""
-text 轉 vector #模型tfidf lsa等
-"""
-# tfidf and LSA
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(listTotal) 
-terms = vectorizer.get_feature_names()
-print(terms)
-
-n_pick_topics = 1362          # reduce dimensions to 1362
-lsa = TruncatedSVD(n_pick_topics)
-X2 = lsa.fit_transform(X)
-print(X2)  
-ll = pd.DataFrame(X2)
-ll.to_csv('./lsa_data.csv')                       
-                      
+"""                                      
 """
 DateFrame prepare for (text to machine learning)
 """
