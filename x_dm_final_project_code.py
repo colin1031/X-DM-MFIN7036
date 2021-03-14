@@ -622,7 +622,6 @@ predictions_vol = rf_vol.predict(test_features)
 # Calculate the absolute errors
 RF_mse_testing_ret = np.square(np.subtract(predictions_ret,test_labels_ret)).mean()
 RF_mse_testing_vol = np.square(np.subtract(predictions_vol,test_labels_vol)).mean()
-print('RF_mse_ret:' + str(RF_mse_testing_ret) + '\nRF_mse_vol:' + str(RF_mse_testing_vol))
 
 """
 SVM (SVR)
@@ -642,9 +641,6 @@ SVR_predictions_vol = svr_vol.predict(test_features)
 
 SVR_mse_testing_ret = np.square(np.subtract(SVR_predictions_ret,test_labels_ret)).mean()
 SVR_mse_testing_vol = np.square(np.subtract(SVR_predictions_vol,test_labels_vol)).mean()
-                            
-print('SVR_mse_ret:' + str(SVR_mse_testing_ret) + '\nSVR_mse_vol:' + str(SVR_mse_testing_vol))
-
     
 """
 Lasso regression (machine learning)
@@ -662,8 +658,9 @@ lasso_predictions_vol=lasso_vol.predict(test_features)
 lasso_mse_testing_ret = np.square(np.subtract(lasso_predictions_ret,test_labels_ret)).mean()
 lasso_mse_testing_vol = np.square(np.subtract(lasso_predictions_vol,test_labels_vol)).mean()
                             
-print('lasso_mse_ret:' + str(lasso_mse_testing_ret) + '\nlasso_mse_vol:' + str(lasso_mse_testing_vol))
-
+"""
+save those results
+"""
 mse_result_texttoY = {'text_Y RF ret/vol':[RF_mse_testing_ret,RF_mse_testing_vol],
               'text_Y SVR ret/vol':[SVR_mse_testing_ret,SVR_mse_testing_vol],
               'text_Y lasso ret/vol':[lasso_mse_testing_ret,lasso_mse_testing_vol]}
