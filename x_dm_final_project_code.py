@@ -568,7 +568,7 @@ DateFrame prepare for (text to machine learning)
 xrp_data = pd.read_csv('final_data.csv')[['Date', 'daily_return', 'volatility_30_days']].reset_index()
 lsa_data = pd.read_csv('lsa_data.csv', index_col=0).reset_index()
 
-ml_data = pd.merge(xrp_data, lsa_data, on='index').drop(columns='index') 
+lsa_ml_data = pd.merge(xrp_data, lsa_data, on='index').drop(columns='index') 
                       
 """
 machine learning apply
