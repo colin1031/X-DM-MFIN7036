@@ -656,13 +656,13 @@ lasso_vol = linear_model.Lasso(alpha=0.1)
 lasso_ret.fit(train_features, train_labels_ret)
 lasso_vol.fit(train_features, train_labels_vol)
 
-lasso_predictions_ret=clf_ret.predict(test_features)
-lasso_predictions_vol=clf_vol.predict(test_features)
+lasso_predictions_ret=lasso_ret.predict(test_features)
+lasso_predictions_vol=lasso_vol.predict(test_features)
 
 lasso_mse_testing_ret = np.square(np.subtract(lasso_predictions_ret,test_labels_ret)).mean()
 lasso_mse_testing_vol = np.square(np.subtract(lasso_predictions_vol,test_labels_vol)).mean()
                             
-print('lasso_mse_ret:' + str(lasso_mse_testing_ret) + '\nclasso_mse_vol:' + str(lasso_mse_testing_vol))
+print('lasso_mse_ret:' + str(lasso_mse_testing_ret) + '\nlasso_mse_vol:' + str(lasso_mse_testing_vol))
 
 mse_result_texttoY = {'text_Y RF ret/vol':[RF_mse_testing_ret,RF_mse_testing_vol],
               'text_Y SVR ret/vol':[SVR_mse_testing_ret,SVR_mse_testing_vol],
