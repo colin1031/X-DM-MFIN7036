@@ -504,23 +504,22 @@ for y in Y_list:
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
 """""
 # drop for further setting features use
-all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1)
+all_data_ml_sentiment_Y=all_data.drop(['Fog_index','polarty_score_with_textblob','polarty_score_with_nltk',"News_sentiment","numOfComments"],axis=1).dropna()
 label_all_data_ml_sentiment_Y=pd.concat([all_data_ml_sentiment_Y.pop(x) for x in ['daily_return', 'volatility_30_days']],axis=1)
 
 """
 random forest
 """
-all_data_rondom_forest=all_data_ml_sentiment_Y.dropna()
-all_data_rondom_forest.columns
+
 # Convert to numpy array
-features= all_data_rondom_forest.iloc[:,1:]
+features= all_data_ml_sentiment_Y.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
 test_features = features[-35:]
 for y in Y_list:
     # Labels are the values we want to predict
-    labels = np.array(all_data_rondom_forest['{}'.format(y)])
+    labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
     # Saving feature names for later use
     train_labels = labels[:-35]
     test_labels = labels[-35:]
@@ -537,34 +536,31 @@ for y in Y_list:
                       
 """
 SVM (SVR)
-"""
-all_data_SVR=all_data_ml_sentiment_Y.dropna()
-                      
-svr_training_x=all_data_SVR.iloc[:-35,1:]
-svr_testing_x=all_data_SVR.iloc[-35:,1:]
+"""                      
+svr_training_x=all_data_ml_sentiment_Y.iloc[:-35,1:]
+svr_testing_x=all_data_ml_sentiment_Y.iloc[-35:,1:]
                       
 for y in Y_list:
     svr = SVR(kernel='rbf', epsilon=0.05) #kernel= Radial basis function kernel, we can also set it as linear/ploy/others
-    svr_training_y=all_data_SVR["{}".format(y)].iloc[:-35]
+    svr_training_y=label_all_data_ml_sentiment_Y["{}".format(y)].iloc[:-35]
     svr.fit(svr_training_x,svr_training_y)
     
     y_svr = svr.predict(svr_testing_x)
-    svr_testing_y=all_data_SVR["{}".format(y)].iloc[-35:]
-    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()}
+    svr_testing_y=label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
+    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
                        
 """
 Lasso regression (machine learning)
 """
-all_data_lasso=all_data_ml_sentiment_Y.dropna()
-lasso_training_x=all_data_lasso.iloc[:-35,1:]
-lasso_testing_x=all_data_lasso.iloc[-35:,1:]
+lasso_training_x=all_data_ml_sentiment_Y.iloc[:-35,3:]
+lasso_testing_x=all_data_ml_sentiment_Y.iloc[-35:,3:]
 for y in Y_list:
     clf = linear_model.Lasso(alpha=0.1)
-    lasso_training_y= all_data_lasso["{}".format(y)].iloc[:-35]
-    clf.fit(all_data_lasso,lasso_training_y)
+    lasso_training_y= label_all_data_ml_sentiment_Y["{}".format(y)].iloc[:-35]
+    clf.fit(lasso_training_x,lasso_training_y)
     y_lasso=clf.predict(lasso_testing_x)
                       
-    lasso_testing_y= all_data_lasso["{}".format(y)].iloc[-35:]
+    lasso_testing_y= label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
     result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
                        
 """
