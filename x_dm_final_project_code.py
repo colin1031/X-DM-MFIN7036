@@ -481,7 +481,7 @@ for y in Y_list:
         next_y = all_data.iloc[-35:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},mse_testing".format(y,sentiment_score):mse_testing})
+        result_list.append({"sentiment_Y,{},{},mse_testing".format(y,sentiment_score):mse_testing})
 
 #predict with only mentions count
 for y in Y_list:
@@ -489,7 +489,7 @@ for y in Y_list:
         next_y = all_data.iloc[-35:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['numOfComments_lag_1d']
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},numOfComments_lag_1d,mse_testing".format(y):mse_testing})
+        result_list.append({"sentiment_Y,{},numOfComments_lag_1d,mse_testing".format(y):mse_testing})
 
 #also control number of mentions? Multi vairable -regression model
 for y in Y_list:
@@ -498,7 +498,7 @@ for y in Y_list:
         next_y = all_data.iloc[-35:]['{}'.format(y)]
         predicted_x=a['Coef.'].iloc[0] + a['Coef.'].iloc[1] * all_data.iloc[-35:]['{}'.format(sentiment_score)]+a['Coef.'].iloc[2] * all_data.iloc[-35:]["numOfComments_lag_1d"]
         mse_testing = np.square(np.subtract(next_y,predicted_x)).mean()
-        result_list.append({"{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
+        result_list.append({"sentiment_Y,{},{},'numOfComments_lag_1d,mse_testing'".format(y,sentiment_score):mse_testing})
 
 """""
 Machine learning (Sentiment to Y) #need update [:3]? based on sun yi financial data merge sentiment data
@@ -532,7 +532,7 @@ for y in Y_list:
     # Calculate the absolute errors
     mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
     #mse for machine learning
-    result_list.append({"{},random_forest,mse_testing".format(y):mse_testing})
+    result_list.append({"sentiment_Y,{},random_forest,mse_testing".format(y):mse_testing})
                       
 """
 SVM (SVR)
@@ -547,7 +547,7 @@ for y in Y_list:
     
     y_svr = svr.predict(svr_testing_x)
     svr_testing_y=label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
-    result_list.append({"{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
+    result_list.append({"sentiment_Y,{},SVR,mse_testing".format(y):np.square(np.subtract(svr_testing_y,y_svr)).mean()})
                        
 """
 Lasso regression (machine learning)
@@ -561,7 +561,7 @@ for y in Y_list:
     y_lasso=clf.predict(lasso_testing_x)
                       
     lasso_testing_y= label_all_data_ml_sentiment_Y["{}".format(y)].iloc[-35:]
-    result_list.append({"{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
+    result_list.append({"sentiment_Y,{},lasso,mse_testing".format(y):np.square(np.subtract(lasso_testing_y,y_lasso)).mean()})
                        
 """
 Text directly apply machine learning to predict Y (fong)
