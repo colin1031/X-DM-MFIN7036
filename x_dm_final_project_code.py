@@ -522,7 +522,7 @@ for y in Y_list:
     rf.fit(train_features, train_labels)
     # Use the forest's predict method on the test data
     predictions = rf.predict(test_features)
-    # Calculate the absolute errors
+    # Calculate the mean squared errors testing
     mse_testing = np.square(np.subtract(predictions,test_labels)).mean()
     #mse for machine learning
     result_list.append({"sentiment_Y,{},random_forest,mse_testing".format(y):mse_testing})
@@ -612,7 +612,7 @@ rf_vol.fit(train_features, train_labels_vol)
 predictions_ret = rf_ret.predict(test_features)
 predictions_vol = rf_vol.predict(test_features)
 
-# Calculate the absolute errors
+# Calculate the mean squared errors (testing)
 RF_mse_testing_ret = np.square(np.subtract(predictions_ret,test_labels_ret)).mean()
 RF_mse_testing_vol = np.square(np.subtract(predictions_vol,test_labels_vol)).mean()
 
@@ -687,24 +687,17 @@ print(testing_mse_volatility_30_days_compare)
 #In predicting daily return
 print(testing_mse_daily_return_compare.head(1))
 #plot testing actual y and predict y
-
-# Convert to numpy array
 features= all_data_ml_sentiment_Y.iloc[:,1:]
 features.columns
 features = np.array(features)
 train_features = features[:-35]
 test_features = features[-35:]
 y=Y_list[0]
-# Labels are the values we want to predict
 labels = np.array(label_all_data_ml_sentiment_Y['{}'.format(y)])
-# Saving feature names for later use
 train_labels = labels[:-35]
 test_labels = labels[-35:]
-# Instantiate model with 100 decision trees
 rf = RandomForestRegressor(n_estimators = 100, random_state = 10)
-# Train the model on training data
 rf.fit(train_features, train_labels)
-# Use the forest's predict method on the test data
 predictions = rf.predict(test_features)
 
 predictions_df=pd.concat([pd.DataFrame(predictions),all_data_ml_sentiment_Y['Date'].iloc[-35:].reset_index()],axis=1)
