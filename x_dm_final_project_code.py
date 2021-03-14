@@ -665,8 +665,10 @@ mse_result_texttoY = {'text_Y RF ret/vol':[RF_mse_testing_ret,RF_mse_testing_vol
 compare which model is the best in predict return / 30 days volatility
 """
 #sentiment to Y (testing MSE)
+dict_all_mse_sentiment_y={}
 for dict_mse in result_list:
-    print("key: %s = "% dict_mse.keys()+'\n'+'value = %s'%dict_mse.values())
+    dict_all_mse_sentiment_y.update(dict_mse)
+series_all_mse_sentiment_y=pd.Series(dict_all_mse_sentiment_y)
     
 #text to Y
 mse_result_texttoY_series=pd.Series(mse_result_texttoY)
