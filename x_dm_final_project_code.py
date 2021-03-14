@@ -786,11 +786,11 @@ plt.legend()
 plt.show()
 
 #In volatility_30_days
-features = ml_data.iloc[:,3:].shift(1) 
-features = np.array(features)
-labels_vol = np.array(ml_data['volatility_30_days']) 
-whole_features = features[1:]
-whole_labels_vol = labels_vol[1:]
+finnal_features = ml_data.iloc[:,3:].shift(1) 
+final_features = np.array(final_features)
+final_labels_vol = np.array(ml_data['volatility_30_days']) 
+whole_features = final_features[1:]
+whole_labels_vol = final_labels_vol[1:]
 
 rf_vol = RandomForestRegressor(n_estimators = 100, random_state = 10)
 rf_vol.fit(whole_features, whole_labels_vol)
