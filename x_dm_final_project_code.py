@@ -351,18 +351,6 @@ for week in week_list:
         
         list_1.append({ 'day':day_x,'postive': post,'negative':neg,'uncertainty':uncer,'numOfUsefulWords': numOfUsefulWords,'numOfWords':numOfWords,'numOfComments':numOfComments, 'News_sentiment': news_sentiment,'Fog_index':Fog, 'polarty_score_with_textblob':polarty_score_with_textblob, 'polarty_score_with_nltk': polarty_score_with_nltk}
 
-# tfidf and LSA
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(listTotal) 
-terms = vectorizer.get_feature_names()
-print(terms)
-
-n_pick_topics = 1362          # 设定主题数为1362，也就是将维度降到了1362
-lsa = TruncatedSVD(n_pick_topics)
-X2 = lsa.fit_transform(X)
-print(X2)  
-ll = pd.DataFrame(X2)
-ll.to_csv('./lsa_data.csv')  
                                            
 # add back date information                     
 dates = pd.date_range(start_date,end_date).strftime("%Y-%m-%d").to_list()
@@ -562,6 +550,19 @@ Text directly apply machine learning to predict
 """
 text 轉 vector #模型tfidf lsa等
 """
+# tfidf and LSA
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(listTotal) 
+terms = vectorizer.get_feature_names()
+print(terms)
+
+n_pick_topics = 1362          # 设定主题数为1362，也就是将维度降到了1362
+lsa = TruncatedSVD(n_pick_topics)
+X2 = lsa.fit_transform(X)
+print(X2)  
+ll = pd.DataFrame(X2)
+ll.to_csv('./lsa_data.csv')                       
+                      
 """
 DateFrame prepare for (text to machine learning)
 """
