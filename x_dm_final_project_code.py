@@ -387,20 +387,16 @@ result.to_csv('./final_data.csv')
                       
 # Visualization of Sentiment Scores
 
-
-
 fig, ax = plt.subplots(1, 1)
 
-data = pd.read_csv('./final_data.csv')
-data2 = pd.read_csv('./Cleaned Ripple Financial Data.csv')
-
-names = data['date']
-x = range(len(names))
+data = pd.read_csv('final_data.csv')
+date = data['Date']
+x = range(len(date))
  
 y_1 = data['News_sentiment']
 y_2 = data['polarty_score_with_nltk']
 y_3 = data['polarty_score_with_textblob']
-y_4 = data2['daily return']
+y_4 = data['daily_return']
  
 plt.plot(x, y_1, color = 'red', marker = 'D', mec='r', mfc='w', linestyle = '-',lw=1  , ms=3, label = 'News Sentiment Score')
 plt.plot(x, y_2, color = 'blue', marker = '*', mec='b', mfc='w',linestyle = '-',lw=1  , ms=3, label = 'Polarty Score With nltks')
@@ -409,11 +405,11 @@ plt.plot(x, y_4, color = 'yellow', marker = 'o', mec='y', mfc='w', linestyle = '
 
 
 plt.legend() 
-plt.xticks(x, names, rotation=45)
+plt.xticks(x, date, rotation=45)
 plt.ylabel("values") 
 # plt.tight_layout()
 
-tick_spacing = 10 
+tick_spacing = 10 # change density of X axis
 ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing ))
 
 plt.show()
