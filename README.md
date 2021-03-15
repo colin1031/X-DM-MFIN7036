@@ -1,17 +1,8 @@
 # <a name="0">MFIN7036 Final Project Group X-DM</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
-<a name="index">**Index**</a>
+
 <a href="#0">MFIN7036 Final Project Group X-DM</a>  
 &emsp;<a href="#1">Group Members</a>  
 &emsp;<a href="#2">Introduction</a>  
-## <a name="1">Group Members</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
-
-Leader:\
-Ho Wei "Colin" Ko   [@colin1031](https://github.com/colin1031).\
-Member:\
-Zongyu LYU   [@Zongyu-Lyu](https://github.com/Zongyu-Lyu).\
-Yifeng ZHONG   [@joufuljohn](https://github.com/joufuljohn).\
-Shurong WANG   [@shurong-rbg](https://github.com/shurong-rbg).\
-Yi SUN   [@Levinee7](https://github.com/Levinee7).
 
 ## Table of Contents
 
@@ -23,6 +14,17 @@ Yi SUN   [@Levinee7](https://github.com/Levinee7).
 - 	- [Contributors](#Contributors)
 - [License](#license)
 - [Useful Links](#Useful Links)
+
+## <a name="1">Group Members</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
+
+Leader:\
+Ho Wei "Colin" Ko   [@colin1031](https://github.com/colin1031).\
+Member:\
+Zongyu LYU   [@Zongyu-Lyu](https://github.com/Zongyu-Lyu).\
+Yifeng ZHONG   [@joufuljohn](https://github.com/joufuljohn).\
+Shurong WANG   [@shurong-rbg](https://github.com/shurong-rbg).\
+Yi SUN   [@Levinee7](https://github.com/Levinee7).
+
 
 ## <a name="2">Introduction</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
 
