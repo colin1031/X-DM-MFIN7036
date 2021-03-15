@@ -1,6 +1,6 @@
 # MFIN7036 Final Project Group X-DM
 
-## Group members
+## Group Members
 
 Leader:\
 Ho Wei "Colin" Ko   [@colin1031](https://github.com/colin1031).\
@@ -52,7 +52,8 @@ This project exists thanks to all the people who contribute.
 
 [MIT](LICENSE) © Richard Littauer
 
-To download all the data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
+## Useful Links
+[All the data](https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing)
 
-Our Blog posts
-https://mfin7036tweetssentimentanalysisonxrp.blogspot.com/
+[Our Blog posts](https://mfin7036tweetssentimentanalysisonxrp.blogspot.com/)
+
