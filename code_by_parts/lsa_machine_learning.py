@@ -22,6 +22,7 @@ all_data['nltk_score_lag_1d'] = all_data['polarty_score_with_nltk'].shift(1)
 all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
 all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
 
+Y_list = ['daily_return','volatility_30_days']
 
 """
 Prediction with regression (sentiment to Y)
