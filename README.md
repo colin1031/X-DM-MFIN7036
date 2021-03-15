@@ -1,6 +1,6 @@
 NLP-Project-MFIN7036
 ===
-Teamname: X-DM
+MFIN7036 Final Project Group X-DM
 ---
 Group Leader:\
 Ho Wei "Colin" Ko github-username: colin1031\
