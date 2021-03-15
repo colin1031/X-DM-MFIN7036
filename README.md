@@ -20,7 +20,16 @@ This project uses `twint`, `nltk`, `textstat`, `textblob`, `wordcloud`, `statsmo
 
     $pip uninstall twint -y
     $pip install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-    
+   
+## Usage
+
+This is only a documentation package. You can print out [README.md](README.md) to your console:
+
+```sh
+$ X-DM-MFIN7036-README
+# Prints out the X-DM-MFIN7036 README
+```
+
 ## Contributing
 
 Feel free to dive in! [Open an issue](https://github.com/colin1031/X-DM-MFIN7036/issues/new) or submit PRs.
