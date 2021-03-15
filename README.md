@@ -30,6 +30,12 @@ $ X-DM-MFIN7036-README
 # Prints out the X-DM-MFIN7036 README
 ```
 
+## Badge
+
+If your README is compliant with X-DM-MFIN7036 and you're on GitHub, it would be great if you could add the badge. This allows people to link back to this README, and helps adoption of the README.
+
+[![X-DM-MFIN7036 compliant](https://img.shields.io/badge/X-DM%20style-MFIN7036-brightgreen.svg?style=flat-square)](https://github.com/colin1031/X-DM-MFIN7036)
+
 ## Contributing
 
 Feel free to dive in! [Open an issue](https://github.com/colin1031/X-DM-MFIN7036/issues/new) or submit PRs.
