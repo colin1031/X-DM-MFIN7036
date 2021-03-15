@@ -50,6 +50,16 @@ import matplotlib.ticker as ticker
 
 
 """
+import all the packages and set up directory in a much more convenient way
+we suggest put xdm_init.py file in your working directory
+"""
+
+# from xdm_init import *
+
+# #input your working directory
+# set_dic('')
+
+"""
 Setting directory
 """
 path = ''
