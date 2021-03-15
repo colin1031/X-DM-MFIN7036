@@ -1,10 +1,10 @@
-NLP-Project-MFIN7036
-===
 MFIN7036 Final Project Group X-DM
+===
+Group members
 ---
-Group Leader:\
+Leader:\
 Ho Wei "Colin" Ko github-username: colin1031\
-Group Member:\
+Member:\
 Zongyu LYU github-username: Zongyu-Lyu\
 Yifeng ZHONG github-username: joyfuljohn\
 Shurong WANG github-username: shurong-rbg\
