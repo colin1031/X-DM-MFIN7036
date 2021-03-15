@@ -1,11 +1,8 @@
 # <a name="0">MFIN7036 Final Project Group X-DM</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
 
-<a href="#0">MFIN7036 Final Project Group X-DM</a>  
-&emsp;<a href="#1">Group Members</a>  
-&emsp;<a href="#2">Introduction</a>  
-
 ## Table of Contents
 
+- [Group Members](#Group Members)
 - [Introduction](#Introduction)
 - [Install](#install)
 - [Usage](#usage)
