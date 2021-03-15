@@ -23,6 +23,7 @@ all_data['News_sentiment_lag_1d'] = all_data['News_sentiment'].shift(1)
 all_data['numOfComments_lag_1d']=all_data['numOfComments'].shift(1)
 
 Y_list = ['daily_return','volatility_30_days']
+sentiment_score_list = ["nltk_score_lag_1d","News_sentiment_lag_1d","textblob_score_lag_1d"]
 
 """
 Prediction with regression (sentiment to Y)
