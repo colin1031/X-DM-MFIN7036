@@ -12,49 +12,16 @@ pip install --user --upgrade git+https://github.com/twintproject/twint.git@origi
 
 """
 
-"""
-import all the module and package we need
-"""
-import os
-import datetime
-from datetime import datetime as dt
-import statsmodels.formula.api as smf
-import time
-import twint
-import pandas as pd
-import asyncio
-import nest_asyncio
-import glob
-import nltk
-import textstat
-import openpyxl
-import statsmodels.formula.api as smf
-import numpy as np
-from nltk.corpus import stopwords
-from nltk import word_tokenize
-from nltk.stem import PorterStemmer
-from nltk.stem import WordNetLemmatizer
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from textblob import TextBlob
-from numpy import nan
-from wordcloud import WordCloud
-from datetime import datetime as dt
-from matplotlib import pyplot
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.datasets import make_regression
-from sklearn.svm import SVR
-from sklearn.model_selection import learning_curve
-from sklearn import linear_model
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-
 
 """
-Setting directory
+import all the packages and set up directory
+we suggest put xdm_init.py file in your working directory
 """
-path = ''
-os.chdir(path)
-os.getcwd()
+
+from xdm_init import *
+
+#input your working directory
+set_dic('')
 
 """
 Mining tweets through Twint (Specific time range) 
