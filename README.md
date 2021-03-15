@@ -3,12 +3,12 @@
 ## Group members
 
 Leader:\
-Ho Wei "Colin" Ko github-username: [@colin1031](https://github.com/colin1031).\
+Ho Wei "Colin" Ko 
 Member:\
-Zongyu LYU github-username: Zongyu-Lyu\
-Yifeng ZHONG github-username: joyfuljohn\
-Shurong WANG github-username: shurong-rbg\
-Yi SUN github-username: Levinee7
+Zongyu LYU [@Zongyu-Lyu](https://github.com/Zongyu-Lyu).\
+Yifeng ZHONG[@joufuljohn](https://github.com/joufuljohn).\
+Shurong WANG[@shurong-rbg](https://github.com/shurong-rbg).\
+Yi SUN[@Levinee7](https://github.com/Levinee7).\
 
 
 ## Introduction
