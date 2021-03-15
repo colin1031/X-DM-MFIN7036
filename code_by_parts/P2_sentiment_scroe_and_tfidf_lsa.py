@@ -246,6 +246,7 @@ text to vector # tfidf and LSA(Dimensionality Reduction) for text to Y analysis
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(listTotal) 
 terms = vectorizer.get_feature_names()
+print(X)
 print(terms)
 
 n_pick_topics = 1362          # reduce dimensions to 1362
