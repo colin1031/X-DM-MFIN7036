@@ -1,14 +1,9 @@
-MFIN7036 Final Project Group X-DM
-===
-<!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
+#MFIN7036 Final Project Group X-DM
 
-Group members
----
+##Group members
+
 Leader:\
-Ho Wei "Colin" Ko github-username: colin1031\
+Ho Wei "Colin" Ko github-username: <a href="https://github.com/colin1031"><img src="https://opencollective.com/standard-readme/contributors.svg?width=890&button=false" /></a>\
 Member:\
 Zongyu LYU github-username: Zongyu-Lyu\
 Yifeng ZHONG github-username: joyfuljohn\
@@ -16,8 +11,8 @@ Shurong WANG github-username: shurong-rbg\
 Yi SUN github-username: Levinee7
 
 
-Introduction
----
+##Introduction
+
 This project investigates the relationship between the daily return and 30-day volatility of Ripple and tweets posted on Twitter in the previous day. As for the underlying asset, Ripple was selected instead of the more famous Bitcoin for two reasons: Ripple’s tweets are easier to process due to fewer meaningless Twitter mentions, and Ripple has a stronger susceptibility to public opinion.
 
 Install
