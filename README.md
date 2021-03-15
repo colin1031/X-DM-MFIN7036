@@ -17,7 +17,7 @@ This project investigates the relationship between the daily return and 30-day v
 
 Install
 ---
-    This project uses node and npm. Go check them out if you don't have them locally installed.
+This project uses `twint`, `nltk`, `textstat`, `textblob`, `wordcloud`, `statsmodels.formula.api` and `sklearn`. Go check them out if you don't have them locally installed.
 
 To download all the data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 
