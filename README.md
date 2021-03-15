@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Group Members](#Group Members)
+- [Group_Members](#Group_Members)
 - [Introduction](#Introduction)
 - [Install](#install)
 - [Usage](#usage)
@@ -10,9 +10,9 @@
 - [Contributing](#contributing)
 - 	- [Contributors](#Contributors)
 - [License](#license)
-- [Useful Links](#Useful Links)
+- [Useful_Links](#Useful_Links)
 
-## Group Members
+## Group_Members
 
 Leader:\
 Ho Wei "Colin" Ko   [@colin1031](https://github.com/colin1031).\
@@ -64,7 +64,7 @@ This project exists thanks to all the people who contribute.
 
 [MIT](LICENSE) © Richard Littauer
 
-## Useful Links
+## Useful_Links
 [All the data](https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing)
 
 [Our Blog posts](https://mfin7036tweetssentimentanalysisonxrp.blogspot.com/)
