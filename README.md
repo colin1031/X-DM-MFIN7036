@@ -20,7 +20,22 @@ This project uses `twint`, `nltk`, `textstat`, `textblob`, `wordcloud`, `statsmo
 
     $pip uninstall twint -y
     $pip install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+    
+## Contributing
 
+Feel free to dive in! [Open an issue](https://github.com/colin1031/X-DM-MFIN7036/issues/new) or submit PRs.
+
+Standard Readme follows the [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/) Code of Conduct.
+
+### Contributors
+
+This project exists thanks to all the people who contribute. 
+<a href="https://github.com/colin1031/X-DM-MFIN7036/graphs/contributors"><img src="https://opencollective.com/standard-readme/contributors.svg?width=890&button=false" /></a>
+
+
+## License
+
+[MIT](LICENSE) © Richard Littauer
 
 To download all the data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 
