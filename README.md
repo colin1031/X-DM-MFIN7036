@@ -1,17 +1,8 @@
+# <a name="0">MFIN7036 Final Project Group X-DM</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
 <a name="index">**Index**</a>
 <a href="#0">MFIN7036 Final Project Group X-DM</a>  
 &emsp;<a href="#1">Group Members</a>  
 &emsp;<a href="#2">Introduction</a>  
-&emsp;<a href="#3">Install</a>  
-&emsp;<a href="#4">Usage</a>  
-<a href="#5">Prints out the X-DM-MFIN7036 README</a>  
-&emsp;<a href="#6">Badge</a>  
-&emsp;<a href="#7">Contributing</a>  
-&emsp;&emsp;<a href="#8">Contributors</a>  
-&emsp;<a href="#9">License</a>  
-&emsp;<a href="#10">Useful Links</a>  
-# <a name="0">MFIN7036 Final Project Group X-DM</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
-
 ## <a name="1">Group Members</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
 
 Leader:\
@@ -22,6 +13,16 @@ Yifeng ZHONG   [@joufuljohn](https://github.com/joufuljohn).\
 Shurong WANG   [@shurong-rbg](https://github.com/shurong-rbg).\
 Yi SUN   [@Levinee7](https://github.com/Levinee7).
 
+## Table of Contents
+
+- [Introduction](#Introduction)
+- [Install](#install)
+- [Usage](#usage)
+- [Badge](#badge)
+- [Contributing](#contributing)
+- 	- [Contributors](#Contributors)
+- [License](#license)
+- [Useful Links](#Useful Links)
 
 ## <a name="2">Introduction</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
 
