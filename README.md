@@ -1,5 +1,9 @@
 MFIN7036 Final Project Group X-DM
 ===
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+
 Group members
 ---
 Leader:\
