@@ -10,6 +10,10 @@ Yifeng ZHONG github-username: joyfuljohn\
 Shurong WANG github-username: shurong-rbg\
 Yi SUN github-username: Levinee7
 
+# Add new contributor <colin1031>, who made a contribution of type <contribution>
+all-contributors add <colin1031> <contribution>
+# Example:
+all-contributors add jfmengels code,doc
 
 To download all the data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 
