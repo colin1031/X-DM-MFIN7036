@@ -1,8 +1,6 @@
-<a name="index">**Index**</a>
-<a href="#0">NLP-Project-MFIN7036</a>  
-<a href="#1">Teamname: X-DM</a>  
-# <a name="0">NLP-Project-MFIN7036</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
-# <a name="1">Teamname: X-DM</a><a style="float:right;text-decoration:none;" href="#index">[Top]</a>
+NLP-Project-MFIN7036
+===
+# Teamname: X-DM
 Group Leader:\
 Ho Wei "Colin" Ko github-username: colin1031\
 Group Member:\
