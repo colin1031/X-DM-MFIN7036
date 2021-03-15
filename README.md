@@ -3,7 +3,7 @@
 ## Group members
 
 Leader:\
-Ho Wei "Colin" Ko github-username: colin1031
+Ho Wei "Colin" Ko github-username: [@colin1031](https://github.com/colin1031).
 Member:\
 Zongyu LYU github-username: Zongyu-Lyu\
 Yifeng ZHONG github-username: joyfuljohn\
