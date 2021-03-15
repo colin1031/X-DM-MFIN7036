@@ -19,6 +19,10 @@ Install
 ---
 This project uses `twint`, `nltk`, `textstat`, `textblob`, `wordcloud`, `statsmodels.formula.api` and `sklearn`. Go check them out if you don't have them locally installed.
 
+    $pip uninstall twint -y
+    $pip install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
+
+
 To download all the data, please go to https://drive.google.com/drive/folders/1PAr0U7jk9AjHdAMOBzPB3kWlNuhs9svK?usp=sharing
 
 Our Blog posts
